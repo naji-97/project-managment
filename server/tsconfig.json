@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                      /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "module": "NodeNext",                   /* Specify what module code is generated. This is standard for Node.js. */
+    "moduleResolution": "nodenext",             /* Specify how TypeScript resolves modules, mimicking Node.js behavior. */
+    "outDir": "./dist",                     /* Specify the output directory for the compiled JavaScript files. */
+    "rootDir": "./",                     /* Specify the root folder within your source files. */
+    "strict": true,                         /* Enable all strict type-checking options. Highly recommended for robust code. */
+    "esModuleInterop": true,                /* Emit additional JavaScript to ease support for importing CommonJS modules. */
+    "skipLibCheck": true,                   /* Skip type checking of declaration files, including Prisma's client, to speed up compilation. */
+    "forceConsistentCasingInFileNames": true, /* Ensure that file imports match the casing of the actual file name. */
+    "sourceMap": true,                      /* Generate source map files for easier debugging. */
+    "resolveJsonModule": true,              /* Enable importing .json files as modules. */
+    "lib": ["ES2022"],                      /* Specify a list of library files to be included in the compilation. */
+    "baseUrl": ".",                        /* The base directory to resolve non-relative module names. */
+    "paths": {                              /* Create a set of entries that remap imports to have a simpler path, e.g., @utils. */
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts", "prisma/**/*"                         /* Include all .ts files within the `src` directory. */
+  ],
+  "exclude": [
+    "node_modules",                       /* Exclude the node_modules directory from compilation. */
+    "dist"                        /* Exclude test files. */
+  ]
+}
