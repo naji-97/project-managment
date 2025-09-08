@@ -74,12 +74,7 @@ const Sidebar = () => {
                 </div>
                 {/* TEAM */}
                 <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-gray-700">
-                    {/* <Image
-                        src="https://pm-s3-images.s3.us-east-2.amazonaws.com/logo.png"
-                        alt="Logo"
-                        width={40}
-                        height={40}
-                    /> */}
+                   
                     <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500  underline font-serif text-shadow-2xs font-bold text-xl   text-[#333] tracking-wider uppercase drop-shadow-md relative ">
                         {"NajiTeam".charAt(0).toUpperCase()}
                     </div>
