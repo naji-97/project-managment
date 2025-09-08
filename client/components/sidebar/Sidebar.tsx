@@ -19,12 +19,9 @@ import {
     Settings,
     ShieldAlert,
     User,
-    User2,
     Users,
-    Users2,
     X,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -40,13 +37,13 @@ const Sidebar = () => {
     );
 
     // const { data: currentUser } = useGetAuthUserQuery({});
-    const handleSignOut = async () => {
-        try {
-            // await signOut();
-        } catch (error) {
-            console.error("Error signing out: ", error);
-        }
-    };
+    // const handleSignOut = async () => {
+    //     try {
+    //         // await signOut();
+    //     } catch (error) {
+    //         console.error("Error signing out: ", error);
+    //     }
+    // };
     // if (!currentUser) return null;
     // const currentUserDetails = currentUser?.userDetails;
 
@@ -83,7 +80,7 @@ const Sidebar = () => {
                         width={40}
                         height={40}
                     /> */}
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500  underline font-serif text-shadow-2xs font-bold text-lg  text-[3em] text-[#333] tracking-wider uppercase drop-shadow-md relative ">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500  underline font-serif text-shadow-2xs font-bold text-xl   text-[#333] tracking-wider uppercase drop-shadow-md relative ">
                         {"NajiTeam".charAt(0).toUpperCase()}
                     </div>
 

@@ -12,7 +12,6 @@ import {
   useGetTasksByUserQuery,
 } from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { NonBinary } from "lucide-react";
 import React, { useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 
@@ -96,7 +95,7 @@ const ReusablePriorityPage = ({ priority }: Props) => {
   const filteredTasks = tasks?.filter(
     (task: Task) => task.priority === priority,
   );
-  console.log("filteredTasks", filteredTasks);
+
 
   if (isTasksError  ) return <div className="text-red-500 text-2xl flex items-center justify-center h-full">Error fetching tasks </div>;
 

@@ -3,9 +3,8 @@
 import React, { useEffect } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import Sidebar from "@/components/sidebar/Sidebar";
-// import AuthProvider from "./authProvider";
 import StoreProvider, { useAppSelector } from "./redux";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
