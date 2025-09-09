@@ -1,0 +1,129 @@
+ <!-- STEP1 Create Budget -->
+
+---<!-- STEP1 to set up a budget -->
+
+Go to AWS Billing Console → Budgets
+
+Click Create budget. chode the default
+
+Select Cost budget. edit butget price from 1.0$ to 0.10
+
+<!-- @@STEP2 Create VPC Vertial Privete Cloude "group all services in a single location-->
+1
+*shosoe the vpc name
+
+-IPv4 CIDR block
+Info
+*IPv4 CIDR 
+10.0.0.0/16
+#keep everything as defalut and click on create vpc
+2
+create subnets: private subnet for RDS databsa and public subnet for EC2 
+
+--1public subnet
+Subnet name
+
+pm_public-subnet1
+
+Availability Zone
+United States (N. Virginia) / use1-az2 (us-east-1a)
+IPv4 VPC CIDR block
+
+10.0.0.0/16
+IPv4 subnet CIDR block
+10.0.0.0/24
+
+add new submit
+--2private subnet
+Subnet name
+
+pm_private-subnet1
+
+Availability Zone
+United States (N. Virginia) / use1-az2 (us-east-1a)
+IPv4 VPC CIDR block
+
+10.0.0.0/16
+IPv4 subnet CIDR block
+10.0.1.0/24
+
+(((Just to keep in your mind create two services for each subnet just in case one get down
+Public Subnet 1: 10.0.0.0/24 → 10.0.0.0 - 10.0.0.255
+
+private Subnet 2: 10.0.1.0/24 → 10.0.1.0 - 10.0.1.255
+
+Public Subnet 1 (RDS): 10.0.2.0/24 → 10.0.2.0 - 10.0.2.255
+
+Private Subnet 2 (RDS replication): 10.0.3.0/24 → 10.0.3.0 - 10.0.3.255)))
+
+
+<!-- STEP3 Create an internet getaway : allows VPC to connect to internet-->
+co to internet geteaway and create it by giving it a name and click create button
+then attach internet geteway to the vpc we have created 
+
+<!-- STEP4 Create Route Table -->
+go to route tables and create rout table give it a name and select your vpc and save
+then go to actions > eidt subnet association
+                    repeat the same process with private-table-route each subneet you have created
+        #for the public route table should give it a public access 
+            _select the public route table and go to routes column and >edit routes:
+            _ 0.0.0.0/0   Internet Gateway shose the geteway you create igw-0eeb105ae0513dcd0
+
+–Allow access to internet for public-route-table by give it 0.0.0.0/0 and internet geteway
+
+<!-- @@ EC2 for backend -->
+Go to EC2 and create instance give it a name and Create new key pair or choose the standard one exict
+and for security group create security group and allow SSH, HTTPS, HTTP trafic
+then connect the instance then go to this url include all commande you need them
+https://github.com/ed-roh/project-management/blob/master/server/aws-ec2-instructions.md
+
+
+
+Step 1: Prepare the backend (Node.js + Express + Prisma)
+
+Connect your backend to PostgreSQL RDS
+
+Create an RDS PostgreSQL instance.
+
+Update your backend .env with the RDS connection:
+
+PORT=8000
+DATABASE_URL="postgresql://<username>:<password>@<rds-endpoint>:5432/<db-name>?schema=public"
+NODE_ENV=production
+
+
+Test locally that you can connect to RDS.
+
+Install PM2
+
+npm install -g pm2
+
+
+PM2 will keep your Node.js backend running on EC2 even if the server restarts.
+
+Set up ecosystem.config.js for production
+
+module.exports = {
+  apps: [
+    {
+      name: "project-management",
+      script: "npm",
+      args: "start",
+      env_production: {
+        NODE_ENV: "production",
+      },
+    },
+  ],
+};
+
+
+Build and start backend
+
+npm install
+npm run build  # if using TypeScript
+pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
+
+
+#####################

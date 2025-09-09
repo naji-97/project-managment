@@ -2,8 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
-import {  useGetProjectsQuery } from "@/state/api";
-// import { signOut } from "aws-amplify/auth";
+import {  useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 import {
     AlertCircle,
     AlertOctagon,
@@ -36,16 +36,16 @@ const Sidebar = () => {
         (state) => state.global.isSidebarCollapsed,
     );
 
-    // const { data: currentUser } = useGetAuthUserQuery({});
-    // const handleSignOut = async () => {
-    //     try {
-    //         // await signOut();
-    //     } catch (error) {
-    //         console.error("Error signing out: ", error);
-    //     }
-    // };
-    // if (!currentUser) return null;
-    // const currentUserDetails = currentUser?.userDetails;
+    const { data: currentUser } = useGetAuthUserQuery({});
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+        } catch (error) {
+            console.error("Error signing out: ", error);
+        }
+    };
+    if (!currentUser) return null;
+    const username = currentUser?.user.username;
 
     const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl
     transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white
@@ -58,7 +58,7 @@ const Sidebar = () => {
                 {/* TOP LOGO */}
                 <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
                     <div className="text-xl font-bold font-mono tracking-widest text-cyan-500 underline dark:text-white">
-                        NJTeam
+                        {username.toUpperCase()}TEAM
                     </div>
                     {isSidebarCollapsed ? null : (
                         <button
@@ -76,13 +76,13 @@ const Sidebar = () => {
                 <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-gray-700">
                    
                     <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500  underline font-serif text-shadow-2xs font-bold text-xl   text-[#333] tracking-wider uppercase drop-shadow-md relative ">
-                        {"NajiTeam".charAt(0).toUpperCase()}
+                        {username.charAt(0).toUpperCase()}
                     </div>
 
 
                     <div>
                         <h3 className="text-md font-bold tracking-wide dark:text-gray-200">
-                            Naji TEAM
+                            {username.toUpperCase()}
                         </h3>
                         <div className="mt-1 flex items-start gap-2">
                             <LockIcon className="mt-[0.1rem] h-3 w-3 text-gray-500 dark:text-gray-400" />
@@ -164,24 +164,16 @@ const Sidebar = () => {
             <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 dark:bg-black md:hidden">
                 <div className="flex w-full items-center">
                     <div className="align-center flex h-9 w-9 justify-center">
-                        {/* {!!currentUserDetails?.profilePictureUrl ? (
-                            <Image
-                                src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${currentUserDetails?.profilePictureUrl}`}
-                                alt={currentUserDetails?.username || "User Profile Picture"}
-                                width={100}
-                                height={50}
-                                className="h-full rounded-full object-cover"
-                            />
-                        ) : ( */}
+                        
                         <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
-                        {/* )} */}
+                        
                     </div>
                     <span className="mx-3 text-gray-800 dark:text-white">
-                        {/* {currentUserDetails?.username} */}
+                        {username}
                     </span>
                     <button
                         className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-                    // onClick={handleSignOut}
+                    onClick={handleSignOut}
                     >
                         Sign out
                     </button>
