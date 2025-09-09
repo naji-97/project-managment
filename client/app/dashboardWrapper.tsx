@@ -6,6 +6,8 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import StoreProvider, { useAppSelector } from "./redux";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Auth from "./AuthProvider";
+import { Authenticator } from "@aws-amplify/ui-react";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const isSidebarCollapsed =useAppSelector(
@@ -40,9 +42,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
         <StoreProvider>
-            {/* <AuthProvider> */}
+            <Authenticator.Provider>
+            <Auth>
                 <DashboardLayout>{children}</DashboardLayout>
-            {/* </AuthProvider> */}
+            </Auth>
+            </Authenticator.Provider>
         </StoreProvider>
     );
 };
