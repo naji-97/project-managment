@@ -17,21 +17,23 @@ const Settings = () => {
 
     // Use a useEffect hook to set state after data is loaded
     useEffect(() => {
-        if (currentUser) {
-            setUserName(currentUser.userDetails.username || "");
-            setUserEmail(currentUser.userDetails.email || "");
-            setUserTeam(currentUser.userDetails.team?.teamName || "");
+        const userDetails = currentUser?.userDetails;
+        if (userDetails) {
+            setUserName(userDetails.username || "");
+            setUserEmail(userDetails.email || "");
+            setUserTeam(userDetails.team?.teamName || "");
         }
         console.log('currentUser in Settings', currentUser);
-        
-    }, [currentUser]); // Run this effect when currentUser changes
+    }, [currentUser]);
+
     if (!currentUser) return null;
     // Conditional return should come after all hooks
    
 
     const handleUpdate = async () => {
         try {
-            const cognitoId = currentUser.userDetails?.cognitoId;
+            const userDetails = currentUser?.userDetails;
+            const cognitoId = userDetails?.cognitoId;
             if (!cognitoId) throw new Error("User Cognito ID is missing");
             await updateUser({
                 cognitoId,
