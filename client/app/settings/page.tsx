@@ -14,7 +14,7 @@ const Settings = () => {
     const [userTeam, setUserTeam] = useState(""); // Initialize with an empty string
     const [inputFocused, setInputFocused] = useState(false);
     const [updateUser, { isLoading: isUpdating, isError: isUpdatingError, isSuccess: isUpdatingSuccess }] = useUpdateUserMutation();
-
+    if (!currentUser) return null;
     // Use a useEffect hook to set state after data is loaded
     React.useEffect(() => {
         if (currentUser) {
@@ -27,9 +27,7 @@ const Settings = () => {
     }, [currentUser]); // Run this effect when currentUser changes
 
     // Conditional return should come after all hooks
-    if (!currentUser) {
-        return <div>Loading...</div>;
-    }
+   
 
     const handleUpdate = async () => {
         try {
@@ -48,7 +46,7 @@ const Settings = () => {
         }
     };
 
-        if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20}/></div>;
+        if (isLoading || !currentUser) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20}/></div>;
         if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
     
 
