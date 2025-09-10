@@ -2,7 +2,7 @@
 import Header from "@/components/header/Header";
 import { Button } from "@/components/ui/button";
 import { useGetAuthUserQuery, useUpdateUserMutation } from "@/state/api";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import { toast } from "react-toastify";
 
@@ -14,9 +14,9 @@ const Settings = () => {
     const [userTeam, setUserTeam] = useState(""); // Initialize with an empty string
     const [inputFocused, setInputFocused] = useState(false);
     const [updateUser, { isLoading: isUpdating, isError: isUpdatingError, isSuccess: isUpdatingSuccess }] = useUpdateUserMutation();
-    if (!currentUser) return null;
+
     // Use a useEffect hook to set state after data is loaded
-    React.useEffect(() => {
+    useEffect(() => {
         if (currentUser) {
             setUserName(currentUser.userDetails.username || "");
             setUserEmail(currentUser.userDetails.email || "");
@@ -25,15 +25,16 @@ const Settings = () => {
         console.log('currentUser in Settings', currentUser);
         
     }, [currentUser]); // Run this effect when currentUser changes
-
+    if (!currentUser) return null;
     // Conditional return should come after all hooks
    
 
     const handleUpdate = async () => {
         try {
-            if (!currentUser.userDetails.cognitoId) throw new Error("User Cognito ID is missing");
+            const cognitoId = currentUser.userDetails?.cognitoId;
+            if (!cognitoId) throw new Error("User Cognito ID is missing");
             await updateUser({
-                cognitoId: currentUser.userDetails.cognitoId,
+                cognitoId,
                 username: userName,
                 email: userEmail,
                 teamId: currentUser.userDetails.team?.teamId  
