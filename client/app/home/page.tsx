@@ -24,7 +24,7 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/data-grid-style";
 import GridLoader from "react-spinners/GridLoader";
 
 const taskColumns: GridColDef[] = [
@@ -47,8 +47,8 @@ const HomePage = () => {
 
     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
-    if (tasksLoading || isProjectsLoading) return <div className="flex items-center justify-center h-full mt-96"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={30} /></div>
-    if (tasksError || !tasks || !projects) return <div>Error fetching data</div>;
+    if (tasksLoading || isProjectsLoading) return <div className="flex items-center justify-center h-full mt-96"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20} /></div>
+    if (tasksError || !tasks || !projects) return <div className="flex items-center justify-center h-full text-red-600 text-2xl">Error fetching data</div>;
 
     const priorityCount = tasks.reduce(
         (acc: Record<string, number>, task: Task) => {

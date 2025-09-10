@@ -31,6 +31,7 @@ export interface User {
   profilePictureUrl?: string;
   cognitoId?: string;
   teamId?: number;
+  team?: Team;
 }
 
 export interface Attachment {
@@ -93,6 +94,8 @@ export const api = createApi({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
         try {
           const user = await getCurrentUser();
+          console.log("this is the user from api",user);
+          
           const session = await fetchAuthSession();
           if (!session) throw new Error("No session found");
           const { userSub } = session;
@@ -160,6 +163,16 @@ export const api = createApi({
     search: build.query<SearchResults, string>({
       query: (query) => `search?query=${query}`,
     }),
+    // Additional endpoints can be defined here
+    updateUser: build.mutation<{ Message: string; updatedUser: User },
+    {cognitoId: string; username?: string; email?: string; teamId?:number; profilePictureUrl?: string}>({
+      query: ({cognitoId, ...patchs}) => ({
+        url: `users/${cognitoId}`,
+        method: "PATCH",
+        body: patchs,
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
@@ -174,4 +187,5 @@ export const {
   useGetTeamsQuery,
   useGetTasksByUserQuery,
   useGetAuthUserQuery,
+  useUpdateUserMutation
 } = api;

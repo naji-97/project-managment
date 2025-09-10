@@ -6,11 +6,12 @@ import { Amplify } from 'aws-amplify';
 import { Authenticator, Heading, useAuthenticator, View } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { usePathname, useRouter } from 'next/navigation';
+import axios from 'axios';
 
 Amplify.configure({
     Auth: {
         Cognito: {
-            
+
             userPoolId: process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID! || "",
             userPoolClientId: process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_CLIENT_ID! || "",
 
@@ -46,7 +47,7 @@ const components = {
         },
     },
     SignUp: {
-        
+
         Footer() {
             const { toSignIn } = useAuthenticator();
             return (
@@ -112,7 +113,7 @@ const formFields = {
 };
 export default function Auth({ children }: { children: React.ReactNode }) {
     const { user } = useAuthenticator((context) => [context.user]);
-    
+
     const router = useRouter();
     const pathname = usePathname();
     const isAuthPage = pathname.match(/^\/(signin|signup)$/);
@@ -120,10 +121,26 @@ export default function Auth({ children }: { children: React.ReactNode }) {
 
 
     useEffect(() => {
-        if (user && isAuthPage) {
-            console.log('user logged in, redirecting to /manager', user);
+        if (user ) {
+            const register = async () => {
+                try {
+                    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users`, {
+                        username: user.username,
+                        cognitoId: user.userId,
+                        email: user.signInDetails?.loginId
+                    }
+
+                    )
+                } catch (error) {
+                    console.error("Error registering user: ", error);
+                }
+            }
+            register();
+            if (isAuthPage) {
+
+                router.push("/dashboard");
+            }
             
-            router.push("/dashboard");
         }
     }, [user, isAuthPage, router]);
     // Allow access to public pages without authentication
@@ -136,7 +153,7 @@ export default function Auth({ children }: { children: React.ReactNode }) {
                 initialState={pathname.includes("signup") ? "signUp" : "signIn"}
 
             >
-                
+
                 {() => <>{children} </>}
             </Authenticator>
         </div>

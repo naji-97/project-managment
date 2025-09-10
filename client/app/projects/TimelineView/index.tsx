@@ -48,7 +48,7 @@ const Timeline = ({ id, setIsModalNewTaskOpen }: Props) => {
         }));
     };
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader color="#b2ced9" size={30} speedMultiplier={0.7} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader color="#b2ced9" size={20} speedMultiplier={0.7} /></div>;
     if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
 
     return (

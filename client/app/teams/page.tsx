@@ -7,7 +7,7 @@ import {
     DataGrid,
     GridColDef,
 } from "@mui/x-data-grid";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/data-grid-style";
 import GridLoader from "react-spinners/GridLoader";
 
 
@@ -30,7 +30,7 @@ const Teams = () => {
     const { data: teams, isLoading, isError } = useGetTeamsQuery();
     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={30} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20} /></div>;
     if (isError || !teams) return <div>Error fetching teams</div>;
 
     return (

@@ -10,7 +10,7 @@ import {
 
 
 import Image from "next/image";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/data-grid-style";
 import GridLoader from "react-spinners/GridLoader";
 
 
@@ -42,7 +42,7 @@ const Users = () => {
     const { data: users, isLoading, isError } = useGetUsersQuery();
     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={30} /></div>
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20} /></div>
     if (isError || !users) return <div className="flex items-center justify-center h-full text-red-600 text-2xl">Error fetching users</div>;
 
     return (

@@ -57,12 +57,12 @@ const Sidebar = () => {
             <div className="flex h-[100%] w-full flex-col justify-start">
                 {/* TOP LOGO */}
                 <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
-                    <div className="text-xl font-bold font-mono tracking-widest text-cyan-500 underline dark:text-white">
-                        {username.toUpperCase()}TEAM
+                    <div className="text-xl font-bold font-math tracking-widest text-[#0070c9] underline dark:text-white">
+                        <Link href="/">{username.slice(0, 1).toUpperCase() + username.slice(2, 3)}TEAM</Link> 
                     </div>
                     {isSidebarCollapsed ? null : (
                         <button
-                            className="py-3"
+                            className="py-3 cursor-pointer"
                             title="Toggle sidebar"
                             onClick={() => {
                                 dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));

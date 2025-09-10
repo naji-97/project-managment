@@ -4,7 +4,7 @@ import { useAppSelector } from "@/app/redux";
 import Header from "@/components/header/Header";
 import ModalNewTask from "@/components/projects/ModalNewTask";
 import TaskCard from "@/components/TaskCard";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/data-grid-style";
 import {
   Priority,
   Task,
@@ -133,7 +133,7 @@ const ReusablePriorityPage = ({ priority }: Props) => {
         </button>
       </div>
       {isLoading ? (
-        <div className="flex items-center justify-center h-full pt-[50px]"><GridLoader color="#b2ced9" size={30} speedMultiplier={0.7} /></div>
+        <div className="flex items-center justify-center h-full pt-[50px]"><GridLoader color="#b2ced9" size={20} speedMultiplier={0.7} /></div>
       ) : view === "list" ? (
         <div className="grid grid-cols-1 gap-4">
             {filteredTasks?.length === 0 && <div className="text-xl text-red-500 flex items-center justify-center"> No tasks found for this priority</div>}

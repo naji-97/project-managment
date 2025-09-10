@@ -16,7 +16,7 @@ const ListView = ({ id, setIsModalNewTaskOpen }: Props) => {
         isLoading,
     } = useGetTasksQuery({ projectId: Number(id) });
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={30} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20} /></div>;
     if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
 
 

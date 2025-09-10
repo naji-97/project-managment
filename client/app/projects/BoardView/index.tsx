@@ -27,7 +27,7 @@ const BoardView = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
         updateTaskStatus({ taskId, status: toStatus });
     };
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={30}/></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20}/></div>;
     if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
 
     return (
@@ -163,7 +163,7 @@ const Task = ({ task }: TaskProps) => {
             {priority}
         </div>
     );
-console.log(task.attachments, 'This is TAASKS ATTACHMENTS');
+// console.log(task.attachments, 'This is TAASKS ATTACHMENTS');
 
     return (
         <div

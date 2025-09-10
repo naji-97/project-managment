@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/app/redux";
 import Header from "@/components/header/Header";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/data-grid-style";
 import { useGetTasksQuery } from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
@@ -95,7 +95,7 @@ const TableView = ({ id, setIsModalNewTaskOpen }: Props) => {
     } = useGetTasksQuery({ projectId: Number(id) });
 
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader color="#b2ced9" size={30} speedMultiplier={0.7} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader color="#b2ced9" size={20} speedMultiplier={0.7} /></div>;
     if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
 
 
