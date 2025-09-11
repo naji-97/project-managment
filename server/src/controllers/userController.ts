@@ -77,15 +77,19 @@ export const updateUser = async (req: Request, res: Response) => {
     if (!isUserExists) {
       return res.status(404).json({ message: "User not found" });
     }
+        const data: any = {
+      username: username ?? isUserExists.username,
+      email: email ?? isUserExists.email,
+      profilePictureUrl: profilePictureUrl ?? isUserExists.profilePictureUrl,
+    };
+
+      if (typeof teamId !== "undefined") {
+      data.teamId = teamId;
+    }
     const updatedUser = await prisma.user.update({
       where: { cognitoId },
-      data: {
-        username: username ?? isUserExists.username,
-        email: email ?? isUserExists.email,
-        profilePictureUrl: profilePictureUrl ?? isUserExists.profilePictureUrl,
-        teamId: teamId ?? isUserExists.teamId,
-        
-      },
+      data,
+      
       include: {
         team: true,
       },

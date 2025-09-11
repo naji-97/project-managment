@@ -88,7 +88,7 @@ const Settings = () => {
                 </div>
                 <div>
                     <label className={labelStyles}>Team</label>
-                    <div className={textStyles}>{userTeam}</div>
+                    <div className={textStyles}>{userTeam || "N/A"}</div>
                 </div>
                 <div>
                     <label className={labelStyles}>Role</label>
