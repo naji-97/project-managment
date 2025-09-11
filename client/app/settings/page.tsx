@@ -16,12 +16,15 @@ const Settings = () => {
     const [updateUser, { isLoading: isUpdating, isError: isUpdatingError, isSuccess: isUpdatingSuccess }] = useUpdateUserMutation();
 
     // Use a useEffect hook to set state after data is loaded
-    const userDetails = currentUser?.userDetails;
     useEffect(() => {
-        if (userDetails) {
+        if (currentUser) {
             setUserName(currentUser.user.username || "");
             setUserEmail(currentUser.user.signInDetails?.loginId || "");
+        }
+        const userDetails = currentUser?.userDetails;
+        if (userDetails && userDetails.team) {
             setUserTeam(userDetails.team?.teamName || "");
+            
         }
     }, [currentUser]);
     console.log('currentUser in Settings', currentUser);
