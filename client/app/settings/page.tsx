@@ -16,15 +16,15 @@ const Settings = () => {
     const [updateUser, { isLoading: isUpdating, isError: isUpdatingError, isSuccess: isUpdatingSuccess }] = useUpdateUserMutation();
 
     // Use a useEffect hook to set state after data is loaded
+    const userDetails = currentUser?.userDetails;
     useEffect(() => {
-        const userDetails = currentUser?.userDetails;
         if (userDetails) {
-            setUserName(userDetails.username || "");
-            setUserEmail(userDetails.email || "");
+            setUserName(currentUser.user.username || "");
+            setUserEmail(currentUser.user.signInDetails?.loginId || "");
             setUserTeam(userDetails.team?.teamName || "");
         }
-        console.log('currentUser in Settings', currentUser);
     }, [currentUser]);
+    console.log('currentUser in Settings', currentUser);
 
     if (!currentUser) return null;
     // Conditional return should come after all hooks
@@ -32,8 +32,7 @@ const Settings = () => {
 
     const handleUpdate = async () => {
         try {
-            const userDetails = currentUser?.userDetails;
-            const cognitoId = userDetails?.cognitoId;
+            const cognitoId = currentUser?.userSub;
             if (!cognitoId) throw new Error("User Cognito ID is missing");
             await updateUser({
                 cognitoId,

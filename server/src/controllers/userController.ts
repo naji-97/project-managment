@@ -21,8 +21,10 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
       where: {
         cognitoId: cognitoId,
       },
+
       include: {
         team: true,
+        
       },
     });
 
