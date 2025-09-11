@@ -41,7 +41,7 @@ const Settings = () => {
                 cognitoId,
                 username: userName,
                 email: userEmail,
-                teamId: currentUser.userDetails.team?.teamId  
+                teamId: currentUser.userDetails.team?.teamId ?? undefined,  
             }).unwrap();
             toast.success("User updated successfully");
             setInputFocused(false);
