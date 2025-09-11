@@ -33,23 +33,23 @@ const Settings = () => {
     // Conditional return should come after all hooks
    
 
-    const handleUpdate = async () => {
-        try {
-            const cognitoId = currentUser?.userSub;
-            if (!cognitoId) throw new Error("User Cognito ID is missing");
-            await updateUser({
-                cognitoId,
-                username: userName,
-                email: userEmail,
-                teamId: currentUser.userDetails.team?.teamId ?? undefined,  
-            }).unwrap();
-            toast.success("User updated successfully");
-            setInputFocused(false);
-            // Optionally, show a success message or perform additional actions
-        } catch (error) {
-            console.error("Error updating user:", error);
-        }
-    };
+    // const handleUpdate = async () => {
+    //     try {
+    //         const cognitoId = currentUser?.userSub;
+    //         if (!cognitoId) throw new Error("User Cognito ID is missing");
+    //         await updateUser({
+    //             cognitoId,
+    //             username: userName,
+    //             email: userEmail,
+    //             teamId: currentUser.userDetails.team?.teamId ?? undefined,  
+    //         }).unwrap();
+    //         toast.success("User updated successfully");
+    //         setInputFocused(false);
+    //         // Optionally, show a success message or perform additional actions
+    //     } catch (error) {
+    //         console.error("Error updating user:", error);
+    //     }
+    // };
 
         if (isLoading || !currentUser) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20}/></div>;
         if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
@@ -70,7 +70,8 @@ const Settings = () => {
                         value={userName}
                         type="text"
                         placeholder="Username"
-                        onChange={(e) => setUserName(e.target.value)}
+                        // onChange={(e) => setUserName(e.target.value)}
+                        readOnly
                         className={textStyles}
                     />
                 </div>
@@ -82,7 +83,8 @@ const Settings = () => {
                         value={userEmail}
                         type="email"
                         placeholder="Email"
-                        onChange={(e) => setUserEmail(e.target.value)}
+                        readOnly
+                        // onChange={(e) => setUserEmail(e.target.value)}
                         className={textStyles}
                     />
                 </div>
@@ -94,20 +96,7 @@ const Settings = () => {
                     <label className={labelStyles}>Role</label>
                     <div className={textStyles}>Developer</div>
                 </div>
-                {
-                    inputFocused && (
-                        <div className={`flex justify-end transition-all duration-500 ${inputFocused ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-                            <Button
-                                onClick={handleUpdate}
-                                disabled={isLoading}
-                                className="rounded bg-blue-500 px-4 py-2 cursor-pointer font-bold text-white hover:bg-blue-700 disabled:opacity-50"
-                            >
-                                {isUpdating ? "Updating..." : "Update "}
-                            </Button>
-                            <Button  className="cursor-pointer ml-2 bg-[#e54848] text-white hover:bg-amber-600" onClick={() => setInputFocused(false)}>Cancel</Button>
-                        </div>
-                    )
-                }
+                
             </div>
         </div>
     );
