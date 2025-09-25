@@ -22,9 +22,9 @@ Amplify.configure({
 const components = {
     Header() {
         return (
-            <View textAlign="center" padding="1.5rem">
-                <Heading level={3} className='mt-4 mb-7'>Project Management Dashboard</Heading>
-                <p className='text-muted-foreground mt-2'>Welcome! <span>Sign in to continue</span> </p>
+            <View textAlign="center" padding="1.5rem" className='sign-in-header'>
+                <Heading level={3} className='mt-4 mb-7 text-2xl'>Project Management Dashboard</Heading>
+                <p className='text-muted-foreground mt-2 text-xl'>Welcome! <span>Sign in to continue</span> </p>
             </View>
         );
     },
