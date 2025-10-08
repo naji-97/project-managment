@@ -1,122 +1,142 @@
 [
   {
-    "username": "AliceJones",
+    "name": "AliceJones",
+    "username": "alicejones",
+    "email": "alice.jones@example.com",
     "teamId": 1,
-    "profilePictureUrl": "p1.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174001"
+    "profilePictureUrl": "p1.jpeg"
   },
   {
-    "username": "BobSmith",
+    "name": "BobSmith",
+    "username": "bobsmith",
+    "email": "bob.smith@example.com",
     "teamId": 2,
-    "profilePictureUrl": "p2.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174002"
+    "profilePictureUrl": "p2.jpeg"
   },
   {
-    "username": "CarolWhite",
+    "name": "CarolWhite",
+    "username": "carolwhite",
+    "email": "carol.white@example.com",
     "teamId": 3,
-    "profilePictureUrl": "p3.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174003"
+    "profilePictureUrl": "p3.jpeg"
   },
   {
-    "username": "DaveBrown",
+    "name": "DaveBrown",
+    "username": "davebrown",
+    "email": "dave.brown@example.com",
     "teamId": 4,
-    "profilePictureUrl": "p4.jpeg",
-    "cognitoId": "213b7530-1031-70e0-67e9-fe0805e18fb3"
+    "profilePictureUrl": "p4.jpeg"
   },
   {
-    "username": "EveClark",
+    "name": "EveClark",
+    "username": "eveclark",
+    "email": "eve.clark@example.com",
     "teamId": 5,
-    "profilePictureUrl": "p5.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174005"
+    "profilePictureUrl": "p5.jpeg"
   },
   {
-    "username": "FrankWright",
+    "name": "FrankWright",
+    "username": "frankwright",
+    "email": "frank.wright@example.com",
     "teamId": 1,
-    "profilePictureUrl": "p6.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174006"
+    "profilePictureUrl": "p6.jpeg"
   },
   {
-    "username": "GraceHall",
+    "name": "GraceHall",
+    "username": "gracehall",
+    "email": "grace.hall@example.com",
     "teamId": 2,
-    "profilePictureUrl": "p7.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174007"
+    "profilePictureUrl": "p7.jpeg"
   },
   {
-    "username": "HenryAllen",
+    "name": "HenryAllen",
+    "username": "henryallen",
+    "email": "henry.allen@example.com",
     "teamId": 3,
-    "profilePictureUrl": "p8.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174008"
+    "profilePictureUrl": "p8.jpeg"
   },
   {
-    "username": "IdaMartin",
+    "name": "IdaMartin",
+    "username": "idamartin",
+    "email": "ida.martin@example.com",
     "teamId": 4,
-    "profilePictureUrl": "p9.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174009"
+    "profilePictureUrl": "p9.jpeg"
   },
   {
-    "username": "JohnDoe",
+    "name": "JohnDoe",
+    "username": "johndoe",
+    "email": "john.doe@example.com",
     "teamId": 5,
-    "profilePictureUrl": "p10.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174010"
+    "profilePictureUrl": "p10.jpeg"
   },
   {
-    "username": "LauraAdams",
+    "name": "LauraAdams",
+    "username": "lauraadams",
+    "email": "laura.adams@example.com",
     "teamId": 1,
-    "profilePictureUrl": "p11.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174011"
+    "profilePictureUrl": "p11.jpeg"
   },
   {
-    "username": "NormanBates",
+    "name": "NormanBates",
+    "username": "normanbates",
+    "email": "norman.bates@example.com",
     "teamId": 2,
-    "profilePictureUrl": "p12.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174012"
+    "profilePictureUrl": "p12.jpeg"
   },
   {
-    "username": "OliviaPace",
+    "name": "OliviaPace",
+    "username": "oliviapace",
+    "email": "olivia.pace@example.com",
     "teamId": 3,
-    "profilePictureUrl": "p13.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174013"
+    "profilePictureUrl": "p13.jpeg"
   },
   {
-    "username": "PeterQuill",
+    "name": "PeterQuill",
+    "username": "peterquill",
+    "email": "peter.quill@example.com",
     "teamId": 4,
-    "profilePictureUrl": "p1.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174014"
+    "profilePictureUrl": "p1.jpeg"
   },
   {
-    "username": "QuincyAdams",
+    "name": "QuincyAdams",
+    "username": "quincyadams",
+    "email": "quincy.adams@example.com",
     "teamId": 5,
-    "profilePictureUrl": "p2.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174015"
+    "profilePictureUrl": "p2.jpeg"
   },
   {
-    "username": "RachelGreen",
+    "name": "RachelGreen",
+    "username": "rachelgreen",
+    "email": "rachel.green@example.com",
     "teamId": 1,
-    "profilePictureUrl": "p3.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174016"
+    "profilePictureUrl": "p3.jpeg"
   },
   {
-    "username": "SteveJobs",
+    "name": "SteveJobs",
+    "username": "stevejobs",
+    "email": "steve.jobs@example.com",
     "teamId": 2,
-    "profilePictureUrl": "p4.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174017"
+    "profilePictureUrl": "p4.jpeg"
   },
   {
-    "username": "TinaFey",
+    "name": "TinaFey",
+    "username": "tinafey",
+    "email": "tina.fey@example.com",
     "teamId": 3,
-    "profilePictureUrl": "p5.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174018"
+    "profilePictureUrl": "p5.jpeg"
   },
   {
-    "username": "UrsulaMonroe",
+    "name": "UrsulaMonroe",
+    "username": "ursulamonroe",
+    "email": "ursula.monroe@example.com",
     "teamId": 4,
-    "profilePictureUrl": "p6.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174019"
+    "profilePictureUrl": "p6.jpeg"
   },
   {
-    "username": "VictorHugo",
+    "name": "VictorHugo",
+    "username": "victorhugo",
+    "email": "victor.hugo@example.com",
     "teamId": 5,
-    "profilePictureUrl": "p7.jpeg",
-    "cognitoId": "123e4567-e89b-12d3-a456-426614174020"
+    "profilePictureUrl": "p7.jpeg"
   }
 ]

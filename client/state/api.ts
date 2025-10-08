@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+import { authAPI } from '@/lib/auth';
 
 export interface Project {
   id: number;
@@ -25,8 +25,9 @@ export enum Status {
 }
 
 export interface User {
-  userId?: number;
+  id?: string;
   username: string;
+  name: string;
   email: string;
   profilePictureUrl?: string;
   cognitoId?: string;
@@ -53,8 +54,8 @@ export interface Task {
   dueDate?: string;
   points?: number;
   projectId: number;
-  authorUserId?: number;
-  assignedUserId?: number;
+  authorUserId?: string;
+  assignedUserId?: string | null;
 
   author?: User;
   assignee?: User;
@@ -78,14 +79,15 @@ export interface Team {
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-      prepareHeaders: async (headers) => {
-      const session = await fetchAuthSession();
-      const { accessToken } = session.tokens ?? {};
-      if (accessToken) {
-        headers.set("Authorization", `Bearer ${accessToken}`);
-      }
-      return headers;
-    },
+    credentials: "include",
+    //   prepareHeaders: async (headers) => {
+    //   const session = await fetchAuthSession();
+    //   const { accessToken } = session.tokens ?? {};
+    //   if (accessToken) {
+    //     headers.set("Authorization", `Bearer ${accessToken}`);
+    //   }
+    //   return headers;
+    // },
   }),
   reducerPath: "api",
   tagTypes: ["Projects", "Tasks", "Users", "Teams"],
@@ -93,22 +95,24 @@ export const api = createApi({
     getAuthUser: build.query({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
         try {
-          const user = await getCurrentUser();
-          console.log("this is the user from api",user);
-          
-          const session = await fetchAuthSession();
-          if (!session) throw new Error("No session found");
-          const { userSub } = session;
-          const { accessToken } = session.tokens ?? {};
-
+          const sessionResponse = await authAPI.getSession();
+          console.log("this is the user from api",sessionResponse);
+          if ( !sessionResponse.user) {
+            throw new Error( "No user in session");
+          }
+          const user = await sessionResponse.user;
+         
+          const userSub = user.id; // Assuming 'id' is the Cognito sub
           const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
           const userDetails = userDetailsResponse.data as User;
+          console.log("userDetails", userDetails, userSub, user);
 
           return { data: { user, userSub, userDetails } };
         } catch (error: any) {
           return { error: error.message || "Could not fetch user data" };
         }
       },
+      providesTags: ["Users"],
     }),
     getProjects: build.query<Project[], void>({
       query: () => "projects",
@@ -131,8 +135,8 @@ export const api = createApi({
       query: (userId) => `tasks/user/${userId}`,
       providesTags: (result, error, userId) =>
         result
-          ? result.map(({ id }) => ({ type: "Tasks", id }))
-          : [{ type: "Tasks", id: userId }],
+      ? result.map(({ id }) => ({ type: "Tasks", id }))
+      : [{ type: "Tasks", id: userId }],
     }),
     createTask: build.mutation<Task, Partial<Task>>({
       query: (task) => ({

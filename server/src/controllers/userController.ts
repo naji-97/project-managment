@@ -15,11 +15,11 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
-  const { cognitoId } = req.params;
+  const { id } = req.params;
   try {
     const user = await prisma.user.findUnique({
       where: {
-        cognitoId: cognitoId,
+        id: id,
       },
 
       include: {
@@ -40,13 +40,13 @@ export const postUser = async (req: Request, res: Response) => {
   try {
     const {
       username,
-      cognitoId,
+      id,
       email,
       profilePictureUrl = "i1.jpg",
       teamId = 1,
     } = req.body;
 
-    const existingUser = await prisma.user.findUnique({ where: { cognitoId } });
+    const existingUser = await prisma.user.findUnique({ where: { id } });
     if (existingUser) {
       return res
         .status(200)
@@ -54,8 +54,9 @@ export const postUser = async (req: Request, res: Response) => {
     }
     const newUser = await prisma.user.create({
       data: {
+        name: username, // Map username to the required name field
         username,
-        cognitoId,
+        id,
         email,
         profilePictureUrl,
         teamId,
@@ -70,18 +71,19 @@ export const postUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { cognitoId } = req.params;
+  const { id } = req.params;
   const { username, email, profilePictureUrl } = req.body;
   try {
-    const isUserExists = await prisma.user.findUnique({ where: { cognitoId } });
+    
+    const isUserExists = await prisma.user.findUnique({ where: { id: id } });
     if (!isUserExists) {
       return res.status(404).json({ message: "User not found" });
     }
     
     const updatedUser = await prisma.user.update({
-      where: { cognitoId },
+      where: { id: id },
       data: {
-        username: username ?? isUserExists.username,
+        name: username ?? isUserExists.name,
         email: email ?? isUserExists.email,
         profilePictureUrl: profilePictureUrl ?? isUserExists.profilePictureUrl,
 

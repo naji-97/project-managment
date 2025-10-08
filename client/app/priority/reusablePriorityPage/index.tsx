@@ -79,23 +79,26 @@ const ReusablePriorityPage = ({ priority }: Props) => {
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
 
   const { data: currentUser } = useGetAuthUserQuery({});
-  const userId = currentUser?.userDetails?.userId ?? null;
+  console.log("priority", priority);
+  const userId = currentUser?.user.id ?? null;
 
+  console.log("this is userId", userId, typeof userId);
   // const userId = 2
   const {
     data: tasks,
     isLoading,
     isError: isTasksError,
-  } = useGetTasksByUserQuery(userId || 0, {
-    skip: userId === null,
+  } = useGetTasksByUserQuery(userId || '', {
+    skip: !userId ,
   });
-
+  
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const filteredTasks = tasks?.filter(
     (task: Task) => task.priority === priority,
   );
 
+console.log("this is filteredTasks",filteredTasks);
 
   if (isTasksError  ) return <div className="text-red-500 text-2xl flex items-center justify-center h-full">Error fetching tasks </div>;
 
@@ -104,6 +107,7 @@ const ReusablePriorityPage = ({ priority }: Props) => {
       <ModalNewTask
         isOpen={isModalNewTaskOpen}
         onClose={() => setIsModalNewTaskOpen(false)}
+        priorety={priority}
       />
       <Header
         name="Priority Page"
@@ -135,8 +139,8 @@ const ReusablePriorityPage = ({ priority }: Props) => {
       {isLoading ? (
         <div className="flex items-center justify-center h-full pt-[50px]"><GridLoader color="#b2ced9" size={20} speedMultiplier={0.7} /></div>
       ) : view === "list" ? (
-        <div className="grid grid-cols-1 gap-4">
-            {filteredTasks?.length === 0 && <div className="text-xl text-red-500 flex items-center justify-center"> No tasks found for this priority</div>}
+        <div className="grid grid-cols-1 gap-4 h-full">
+            {filteredTasks?.length === 0 && <div className="text-xl h-full flex items-center justify-center"> No tasks found for this priority</div>}
           {filteredTasks?.map((task: Task) => (
             <TaskCard key={task.id} task={task} />
           ))}
@@ -146,7 +150,7 @@ const ReusablePriorityPage = ({ priority }: Props) => {
         filteredTasks &&  (
           
           <div className="z-0 w-full">
-            {filteredTasks.length === 0 && <div className="text-xl text-red-500 flex items-center justify-center"> No tasks found for this priority</div>}
+            {/* {filteredTasks.length === 0 && <div className="text-xl text-red-500 flex items-center justify-center"> No tasks found for this priority</div>} */}
             <DataGrid
               rows={filteredTasks}
               columns={columns}

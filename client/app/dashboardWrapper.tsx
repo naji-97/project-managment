@@ -6,8 +6,8 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import StoreProvider, { useAppSelector } from "./redux";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Auth from "./AuthProvider";
-import { Authenticator } from "@aws-amplify/ui-react";
+import {AuthProvider} from "./AuthProvider";
+import { useGetAuthUserQuery } from "@/state/api";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const isSidebarCollapsed =useAppSelector(
@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         
     );
     const isDarkMode =  useAppSelector((state) => state.global.isDarkMode);
-
+    const { data: currentUser, isLoading, error } = useGetAuthUserQuery({});
     useEffect(() => {
         if (isDarkMode) {
             document.documentElement.classList.add("dark");
@@ -29,7 +29,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <ToastContainer position="top-center" autoClose={3000} theme={isDarkMode ? "dark" : "light"} />
             <Sidebar />
             <main
-                className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${isSidebarCollapsed ? "" : "md:pl-64"
+                className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${isSidebarCollapsed || !currentUser ? "" : "md:pl-64"
                     }`}
             >
                 <Navbar />
@@ -42,11 +42,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
         <StoreProvider>
-            <Authenticator.Provider>
-            <Auth>
+            {/* <Authenticator.Provider> */}
+            <AuthProvider>
                 <DashboardLayout>{children}</DashboardLayout>
-            </Auth>
-            </Authenticator.Provider>
+            </AuthProvider>
+            {/* </Authenticator.Provider> */}
         </StoreProvider>
     );
 };

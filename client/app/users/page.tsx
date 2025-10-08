@@ -52,7 +52,7 @@ const Users = () => {
                 <DataGrid
                     rows={users || []}
                     columns={columns}
-                    getRowId={(row) => row.userId}
+                    getRowId={(row) => row.id}
                     pagination
                    showToolbar
                     className={dataGridClassNames}

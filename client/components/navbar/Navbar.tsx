@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Menu, Moon, Search, Settings, Sun, User } from "lucide-react";
 import Link from "next/link";
@@ -7,6 +8,8 @@ import { useGetAuthUserQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { authAPI } from "@/lib/auth";
+import { redirect, useRouter } from "next/navigation";
 
 const Navbar = () => {
     const dispatch = useAppDispatch();
@@ -14,12 +17,14 @@ const Navbar = () => {
         (state) => state.global.isSidebarCollapsed,
     );
     const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-
+    const router = useRouter();
 
     const { data: currentUser } = useGetAuthUserQuery({});
     const handleSignOut = async () => {
         try {
-            await signOut();
+             await authAPI.signOut();
+             console.log("signed out successfully");
+            window.location.href = '/login';
         } catch (error) {
             console.error("Error signing out: ", error);
         }

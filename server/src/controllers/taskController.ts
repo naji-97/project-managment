@@ -43,6 +43,13 @@ export const createTask = async (
     assignedUserId,
   } = req.body;
   try {
+    console.log("Creating task with data:", req.body);
+    if (!title || !authorUserId || !projectId) {
+      res
+        .status(400)
+        .json({ message: "Title, authorUserId, and projectId are required" });
+      return;
+    }
     const newTask = await prisma.task.create({
       data: {
         title,
@@ -60,9 +67,12 @@ export const createTask = async (
     });
     res.status(201).json(newTask);
   } catch (error: any) {
+    console.log(error)
     res
       .status(500)
-      .json({ message: `Error creating a task: ${error.message}` });
+      .json({ message: `Error creating a task: ${error.message}`,
+        error: error.message
+       });
   }
 };
 
@@ -91,13 +101,15 @@ export const getUserTasks = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { userId } = req.params;
+  const { id } = req.params;
+  console.log("Fetching tasks for user ID:", id);
+
   try {
     const tasks = await prisma.task.findMany({
       where: {
         OR: [
-          { authorUserId: Number(userId) },
-          { assignedUserId: Number(userId) },
+          { authorUserId: id },
+          { assignedUserId: id },
         ],
       },
       include: {

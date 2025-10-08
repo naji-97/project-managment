@@ -1,9 +1,7 @@
 "use client";
-
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import {  useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
-import { signOut } from "aws-amplify/auth";
 import {
     AlertCircle,
     AlertOctagon,
@@ -19,13 +17,15 @@ import {
     Settings,
     ShieldAlert,
     User,
+
     Users,
     X,
 } from "lucide-react";
+import { signOut } from "aws-amplify/auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-
+import { authAPI } from "@/lib/auth";
 const Sidebar = () => {
     const [showProjects, setShowProjects] = useState(true);
     const [showPriority, setShowPriority] = useState(true);
@@ -36,10 +36,12 @@ const Sidebar = () => {
         (state) => state.global.isSidebarCollapsed,
     );
 
-    const { data: currentUser } = useGetAuthUserQuery({});
+    const { data: currentUser, isLoading, error } = useGetAuthUserQuery({});
+    console.log("currentUser", currentUser);
+    
     const handleSignOut = async () => {
         try {
-            await signOut();
+            await authAPI.signOut(); 
         } catch (error) {
             console.error("Error signing out: ", error);
         }
