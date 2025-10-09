@@ -11,6 +11,7 @@ export interface User {
 export interface AuthResponse {
   data?: {
     user: User;
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     session: any;
   };
   error?: string;

@@ -59,20 +59,21 @@ export default function LoginForm() {
         // e.preventDefault();
         setIsLoading(true);
         setMessage('');
+        toast.success('Logging in...');
 
         try {
             const result = await authAPI.signIn(values.email, values.password);
-
-            if (result.error) {
-                toast.error(`Error: ${result.error}`);
+            console.log("this ther result",result)
+            if (result.code === "INVALID_EMAIL_OR_PASSWORD") {
+                toast.error(result.message);
+                setMessage(result.message);
             } else {
                 toast.success('Login successful! Redirecting...');
                 console.log("Login result", result);
 
                 // Redirect to the original page or home
                 const redirectPath = redirectTo || '/';
-                console.log("Redirecting to:", redirectPath);
-
+                setMessage('login successful! Redirecting...');
                 // Use setTimeout to show the success message briefly
                 setTimeout(() => {
                     window.location.href = redirectPath;

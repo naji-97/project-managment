@@ -1,10 +1,8 @@
 "use client";
 import Header from "@/components/header/Header";
-import { Button } from "@/components/ui/button";
-import { useGetAuthUserQuery, useUpdateUserMutation } from "@/state/api";
+import { useGetAuthUserQuery,  } from "@/state/api";
 import React, { useEffect, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
-import { toast } from "react-toastify";
 
 const Settings = () => {
     // All Hooks must be called unconditionally at the top level
@@ -12,9 +10,7 @@ const Settings = () => {
     const [userName, setUserName] = useState(""); // Initialize with an empty string
     const [userEmail, setUserEmail] = useState(""); // Initialize with an empty string
     const [userTeam, setUserTeam] = useState(""); // Initialize with an empty string
-    const [inputFocused, setInputFocused] = useState(false);
-    const [updateUser, { isLoading: isUpdating, isError: isUpdatingError, isSuccess: isUpdatingSuccess }] = useUpdateUserMutation();
-
+   
     // Use a useEffect hook to set state after data is loaded
     useEffect(() => {
         if (currentUser) {
@@ -66,11 +62,10 @@ const Settings = () => {
                 <div>
                     <label className={labelStyles}>Username</label>
                     <input
-                        onFocus={() => setInputFocused(true)}
+                        
                         value={userName}
                         type="text"
                         placeholder="Username"
-                        // onChange={(e) => setUserName(e.target.value)}
                         readOnly
                         className={textStyles}
                     />
@@ -78,7 +73,6 @@ const Settings = () => {
                 <div>
                     <label className={labelStyles}>Email</label>
                     <input
-                        onFocus={() => setInputFocused(true)}
                         // onBlur={() => setInputFocused(false)}
                         value={userEmail}
                         type="email"

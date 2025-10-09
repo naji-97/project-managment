@@ -7,11 +7,11 @@ import { AppLogoIcon } from '@/components/froms/LoginForm';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from 'react-toastify';
 export default function ResetPasswordPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+
     const [error, setError] = useState('');
     const [token, setToken] = useState('');
     const [tokenError, setTokenError] = useState('');
@@ -35,19 +35,19 @@ export default function ResetPasswordPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+        
         setError('');
-        setMessage('');
+        
 
         if (password !== confirmPassword) {
             setError('Passwords do not match');
-            setLoading(false);
+            
             return;
         }
 
         if (password.length < 6) {
             setError('Password must be at least 6 characters long');
-            setLoading(false);
+            
             return;
         }
 
@@ -67,8 +67,8 @@ export default function ResetPasswordPage() {
 
             if (data.error) {
                 setError(data.error);
+                toast.error(error); 
             } else {
-                setMessage('Password has been reset successfully! Redirecting to login...');
                 setTimeout(() => {
                     router.push('/login');
                 }, 2000);
@@ -76,7 +76,6 @@ export default function ResetPasswordPage() {
         } catch (err) {
             setError('An error occurred. Please try again.');
         } finally {
-            setLoading(false);
         }
     };
 
@@ -153,7 +152,7 @@ export default function ResetPasswordPage() {
 
                     <div className="mt-6 text-center">
                         <p className="text-muted-foreground text-sm">
-                            We'll send you a link to reset your password.
+                            We&apos;ll send you a link to reset your password.
                         </p>
                     </div>
                 </div>

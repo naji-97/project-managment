@@ -63,7 +63,7 @@ export const auth = betterAuth({
     },
     
     session: {
-        expiresIn: 1 * 24 * 60 * 60, // 15 days
+        expiresIn: 1 * 24 * 60 * 60, // 1 days
     },
    
 

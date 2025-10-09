@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         
     );
     const isDarkMode =  useAppSelector((state) => state.global.isDarkMode);
-    const { data: currentUser, isLoading, error } = useGetAuthUserQuery({});
+    const { data: currentUser} = useGetAuthUserQuery({});
     useEffect(() => {
         if (isDarkMode) {
             document.documentElement.classList.add("dark");

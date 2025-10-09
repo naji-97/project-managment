@@ -6,27 +6,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { AppLogoIcon } from '@/components/froms/LoginForm';
+import { toast } from 'react-toastify';
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+ 
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+
         setError('');
-        setMessage('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/auth/request-password-reset', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/request-password-reset`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     email,
-                    redirectTo: 'http://localhost:3000/reset-password'
+                    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`
                 }),
             });
 
@@ -34,14 +33,11 @@ export default function ForgotPasswordPage() {
 
             if (data.error) {
                 setError(data.error);
-            } else {
-                setMessage('Password reset instructions have been sent to your email.');
+                toast.error(error);
             }
         } catch (err) {
             setError('An error occurred. Please try again.');
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     return (
@@ -83,7 +79,7 @@ export default function ForgotPasswordPage() {
 
                     <div className="mt-6 text-center">
                         <p className="text-muted-foreground text-sm">
-                            We'll send you a link to reset your password.
+                            We&apos;ll send you a link to reset your password.
                         </p>
                     </div>
                 </div>
