@@ -20,9 +20,13 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql", // ✅ you’re using Neon
     }),
-    trustedOrigins: ["http://localhost:3000",
-                    "http://localhost:8000",
-                    "https://project-managment-4nsj0hswa-najis-projects-c796683a.vercel.app"
+     trustedOrigins: [
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "https://project-managment-lilac.vercel.app",
+        "https://project-managment-5sfzfgfpy-najis-projects-c796683a.vercel.app",
+        "https://project-managment-4nsj0hswa-najis-projects-c796683a.vercel.app",
+        "https://project-managment-git-main-najis-projects-c796683a.vercel.app"
     ],
     
     user:{
