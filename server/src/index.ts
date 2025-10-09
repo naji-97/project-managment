@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin:[ "http://localhost:3000", "https://project-managment-6gws23okr-najis-projects-c796683a.vercel.app"], // Your frontend URL
+    origin:[ "http://localhost:3000", "https://project-managment-4nsj0hswa-najis-projects-c796683a.vercel.app"], // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
