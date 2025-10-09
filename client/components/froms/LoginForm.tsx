@@ -75,9 +75,9 @@ export default function LoginForm() {
                 const redirectPath = redirectTo || '/';
                 setMessage('login successful! Redirecting...');
                 // Use setTimeout to show the success message briefly
-                setTimeout(() => {
-                    window.location.href = redirectPath;
-                }, 500);
+                // setTimeout(() => {
+                //     window.location.href = redirectPath;
+                // }, 500);
             }
         } catch (error) {
             toast.error('An error occurred during login');
