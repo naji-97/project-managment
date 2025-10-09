@@ -53,8 +53,8 @@ export default function SignupForm() {
         },
     });
 
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+
+
 
     const onSubmit = async (data: RegisterFormValues) => {
         console.log(data);
@@ -67,20 +67,24 @@ export default function SignupForm() {
                 data.name,
                 data.username
             );
-
-            if (result.error) {
-                toast.error(`Error: ${result.error}`);
+            console.log('signup result', result);
+            
+            if (result.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+                toast.error(`Error: ${result.message || 'Signup failed'}`);
+                console.log("toas should display");
+                
+                
             } else {
                 toast.success('Account created successfully! Redirecting...');
                 // Redirect or update app state
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 500);
+                // setTimeout(() => {
+                //     window.location.href = '/';
+                // }, 500);
             }
         } catch (error) {
             toast.error('An error occurred during signup');
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
@@ -121,7 +125,7 @@ export default function SignupForm() {
                                         <FormItem className="space-y-2">
                                             <FormLabel>User name </FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder='johndoe'/>
+                                                <Input {...field} type='text' placeholder='johndoe'/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -135,7 +139,7 @@ export default function SignupForm() {
                                         <FormItem className="space-y-2">
                                             <FormLabel>Full name</FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder='John Doe'/>
+                                                <Input {...field} type='text' placeholder='John Doe'/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

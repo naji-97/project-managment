@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const sessionToken = request.cookies.get('better-auth.session_token')?.value;
+  console.log("this is session token",sessionToken)
   const { pathname } = request.nextUrl;
 
   // ONLY these routes are public when not authenticated
@@ -18,6 +19,10 @@ export function middleware(request: NextRequest) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
+  }else if (sessionToken && isPublicRoute) {
+    console.log(`🔄 Redirect: Authenticated user trying to access ${pathname}, going to home`, request.url);
+    return NextResponse.redirect(new URL('/',
+      request.url));
   }
 
 //   // CASE 2: Has session token AND trying to access login/signup → REDIRECT TO HOME

@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar/Navbar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import StoreProvider, { useAppSelector } from "./redux";
 import { ToastContainer } from 'react-toastify';
+import { Toaster } from "@/components/ui/sonner"
 import 'react-toastify/dist/ReactToastify.css';
 import {AuthProvider} from "./AuthProvider";
 import { useGetAuthUserQuery } from "@/state/api";
@@ -34,6 +35,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             >
                 <Navbar />
                 {children}
+                <Toaster />
             </main>
         </div>
     );

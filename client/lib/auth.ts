@@ -25,7 +25,9 @@ export const authAPI = {
       body: JSON.stringify({ email, password, name, username }),
       credentials: 'include', // Important for cookies
     });
-    return await response.json();
+    console.log("response signup" ,response);
+    
+    return await response.json() ;
   },
 
   signIn: async (email: string, password: string) => {
@@ -36,11 +38,11 @@ export const authAPI = {
           body: JSON.stringify({ email, password }),
           credentials: 'include',
         });
-        console.log("signIn response status" ,response.status);
-        console.log("signIn response headers" ,Object.fromEntries(response.headers.entries()));
-        const data= await response.json();
-        console.log("signIn response data" ,data);
-        return await data;
+        // console.log("signIn response status" ,response.status);
+        // console.log("signIn response headers" ,Object.fromEntries(response.headers.entries()));
+        // const data= await response;
+        console.log("signIn response data" ,response);
+        return  response.json();
       
     } catch (error) {
         console.log("signIn error" ,error);

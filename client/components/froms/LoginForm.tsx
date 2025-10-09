@@ -22,7 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 // Define the validation schema with Zod
 const loginSchema = z.object({
@@ -36,16 +35,12 @@ const loginSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState('');
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get('from');
     
-    const router = useRouter();
+    
     // Initialize react-hook-form with zod validation
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -58,26 +53,25 @@ export default function LoginForm() {
    async function onSubmit(values: LoginFormValues) {
         // e.preventDefault();
         setIsLoading(true);
-        setMessage('');
-        toast.success('Logging in...');
 
         try {
             const result = await authAPI.signIn(values.email, values.password);
             console.log("this ther result",result)
-            if (result.code === "INVALID_EMAIL_OR_PASSWORD") {
-                toast.error(result.message);
-                setMessage(result.message);
+          if (result.code === "INVALID_EMAIL_OR_PASSWORD") {
+                // toast.error(result?.message || 'Login failed');
+              
+                toast.error(result.message || 'Login failed');
             } else {
                 toast.success('Login successful! Redirecting...');
                 console.log("Login result", result);
 
                 // Redirect to the original page or home
-                // const redirectPath = redirectTo || '/';
-                setMessage('login successful! Redirecting...');
+                const redirectPath = redirectTo || '/';
+                
                 // Use setTimeout to show the success message briefly
-                // setTimeout(() => {
-                //     window.location.href = redirectPath;
-                // }, 500);
+                setTimeout(() => {
+                    window.location.href = redirectPath;
+                }, 500);
             }
         } catch (error) {
             toast.error('An error occurred during login');
