@@ -38,9 +38,9 @@ export const authAPI = {
           body: JSON.stringify({ email, password }),
           credentials: 'include',
         });
-        // console.log("signIn response status" ,response.status);
-        // console.log("signIn response headers" ,Object.fromEntries(response.headers.entries()));
-        // const data= await response;
+        console.log("Sign-in response status:", response.status);
+      console.log("Sign-in response cookies:", response.headers.get('set-cookie'));
+      console.log("Document cookies after sign-in:", document.cookie);
         console.log("signIn response data" ,response);
         return  response.json();
       
@@ -51,22 +51,26 @@ export const authAPI = {
     }
   },
   getSession: async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/me`, {
-          credentials: 'include',
-        });
-        console.log("response status" ,response.status);
-        console.log("response headers" ,Object.fromEntries(response.headers.entries()));
-        
-        
-        const data= await response.json();
-        console.log("session data" ,data);
-        return data;
-    } catch (error) {
-        console.error('Error fetching session:', error);
-        
-    }
-  },
+  try {
+      console.log("Document cookies:", document.cookie);
+      console.log("API_BASE_URL:", API_BASE_URL);
+      
+      const response = await fetch(`${API_BASE_URL}/api/me`, {
+        credentials: 'include',
+      });
+      
+      console.log("response status", response.status);
+      console.log("response headers", Object.fromEntries(response.headers.entries()));
+      console.log("response cookies", response.headers.get('set-cookie'));
+      
+      const data = await response.json();
+      console.log("session data", data);
+      return data;
+  } catch (error) {
+      console.error('Error fetching session:', error);
+      return null;
+  }
+},
 
   signOut: async () => {
     const response = await fetch(`${API_BASE_URL}/api/auth/sign-out`, {
