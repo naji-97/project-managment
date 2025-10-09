@@ -77,7 +77,7 @@ const Search = () => {
                                         <h2>Users</h2>
                                     )}
                                     {searchResults.users?.map((user) => (
-                                        <UserCard key={user.userId} user={user} />
+                                        <UserCard key={user.id} user={user} />
                                     ))}
 
                                 </div>
@@ -101,7 +101,7 @@ const Search = () => {
                             <h2>Users</h2>
                         )}
                         {searchResults.users?.map((user) => (
-                            <UserCard key={user.userId} user={user} />
+                            <UserCard key={user.id} user={user} />
                         ))}
 
                     </div>
