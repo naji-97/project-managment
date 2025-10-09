@@ -230,7 +230,7 @@ const Task = ({ task }: TaskProps) => {
                     <div className="flex -space-x-[6px] overflow-hidden">
                         {task.assignee && (
                             <Image
-                                key={`${task.assignee.userId}`}
+                                key={`${task.assignee.id}`}
                                 src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${task.assignee.profilePictureUrl!}`}
                                 alt={task.assignee.username}
                                 width={30}
@@ -239,9 +239,9 @@ const Task = ({ task }: TaskProps) => {
                             />
                         )}
 
-                        {task.author && task.author.userId !== task.assignee?.userId && (
+                        {task.author && task.author.id !== task.assignee?.id && (
                             <Image
-                                key={`${task.author.userId}`}
+                                key={`${task.author.id}`}
                                 src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${task.author.profilePictureUrl!}`}
                                 alt={task.author.username}
                                 width={30}
