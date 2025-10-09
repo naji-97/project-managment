@@ -1,6 +1,5 @@
 {
-  "compilerOptions": {
-    "ignoreDeprecations": "6.0",              
+  "compilerOptions": {          
     "target": "es2022",                      
     "module": "commonjs",   
     "outDir": "./dist",                     
