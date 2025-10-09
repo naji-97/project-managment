@@ -72,7 +72,7 @@ export default function LoginForm() {
                 console.log("Login result", result);
 
                 // Redirect to the original page or home
-                const redirectPath = redirectTo || '/';
+                // const redirectPath = redirectTo || '/';
                 setMessage('login successful! Redirecting...');
                 // Use setTimeout to show the success message briefly
                 // setTimeout(() => {

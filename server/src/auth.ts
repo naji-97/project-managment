@@ -22,7 +22,7 @@ export const auth = betterAuth({
     }),
     trustedOrigins: ["http://localhost:3000",
                     "http://localhost:8000",
-                    "https://project-managment-lilac.vercel.app"
+                    "https://project-managment-6gws23okr-najis-projects-c796683a.vercel.app"
     ],
     
     user:{
