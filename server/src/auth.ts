@@ -21,7 +21,8 @@ export const auth = betterAuth({
         provider: "postgresql", // ✅ you’re using Neon
     }),
     trustedOrigins: ["http://localhost:3000",
-                    "http://localhost:8000"
+                    "http://localhost:8000",
+                    "https://project-managment-lilac.vercel.app"
     ],
     
     user:{
