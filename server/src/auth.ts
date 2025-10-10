@@ -26,6 +26,7 @@ export const auth = betterAuth({
     "https://project-managment-lilac.vercel.app",
     "https://*.vercel.app" // Wildcard for all Vercel previews
 ],
+
     
     user:{
         modelName: "User",
@@ -67,6 +68,10 @@ export const auth = betterAuth({
     
     session: {
         expiresIn: 1 * 24 * 60 * 60, // 1 days
+        sameSite: "none",
+        secure: true,
+        domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // change this to your domain in production
+
     },
    
 
