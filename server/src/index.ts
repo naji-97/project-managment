@@ -39,13 +39,7 @@ app.use((req, res, next) => {
   // Use JSON parsing for all other routes
   return express.json()(req, res, next);
 });
-// Alternative: You can also use bodyParser with the same condition
-// app.use((req, res, next) => {
-//   if (req.path.startsWith('/api/auth/')) {
-//     return next();
-//   }
-//   return bodyParser.json()(req, res, next);
-// });
+
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
@@ -65,19 +59,20 @@ app.get("/api/me", async (req, res) => {
 });
 
 // Your other API routes
-app.get("/api/protected", async (req, res) => {
+app.get("/api/me", async (req, res) => {
+  // Add detailed logging
+  console.log('[/api/me] Request origin:', req.headers.origin);
+  console.log('[/api/me] Cookies received:', req.headers.cookie);
+
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
-  
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  
-  res.json({ 
-    message: "Protected data", 
-    user: session.user 
-  });
+
+  console.log('[/api/me] Session object:', session); // This will show if the session is found on the server
+
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  return res.json(session);
 });
 /* ROUTES */
 app.get("/", (req, res) => {

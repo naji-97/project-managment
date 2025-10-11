@@ -70,7 +70,7 @@ export const auth = betterAuth({
         expiresIn: 1 * 24 * 60 * 60, // 1 days
         sameSite: "none",
         secure: true,
-        domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // change this to your domain in production
+    domain: process.env.NODE_ENV === "production" ? "undefined" : undefined, // change this to your domain in production
 
     },
    
