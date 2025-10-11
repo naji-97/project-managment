@@ -1,31 +1,34 @@
 // client/middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import {getSessionCookie} from "better-auth/cookies";
 
 export function middleware(request: NextRequest) {
-  const allCookies = request.cookies.getAll();
-    allCookies.forEach(cookie => {
-    console.log(`Cookie: ${cookie.name} = ${cookie.value ? '***' + cookie.value.slice(-10) : 'empty'}`);
-  });
+ const sessionCookie = getSessionCookie(request, {
+    cookieName: 'auth.session_token',
+    // secureCookieName: '__Secure-auth.session_token', // For production with HTTPS);
+ });
 
+ console.log("Session cookie found:", !!sessionCookie);
+  console.log("Session cookie value:", sessionCookie ? "***" + sessionCookie.slice(-10) : "none");
   
-  const sessionToken =  request.cookies.get('auth.session_token')?.value|| request.cookies.get("__Secure-auth.session_token") // Fallback for development;
-  console.log("this is session token",sessionToken)
+  // const sessionToken =  request.cookies.get('auth.session_token')?.value|| request.cookies.get("__Secure-auth.session_token") // Fallback for development;
+  console.log("this is session token",sessionCookie)
   const { pathname } = request.nextUrl;
 
   // ONLY these routes are public when not authenticated
   const publicRoutes = ['/login', '/register', "/forgot-password",'/reset-password', '/api/auth'];
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
-  console.log(`Path: ${pathname}, Has Token: ${!!sessionToken}, Is Public: ${isPublicRoute}`);
+  console.log(`Path: ${pathname}, Has Token: ${!!sessionCookie}, Is Public: ${isPublicRoute}`);
 
   // CASE 1: No session token AND trying to access non-public route → REDIRECT TO LOGIN
-  if (!sessionToken && !isPublicRoute) {
+  if (!sessionCookie && !isPublicRoute) {
     console.log(`🚫 Blocked: No session for ${pathname}, redirecting to login`);
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
-  }else if (sessionToken && isPublicRoute) {
+  }else if (sessionCookie && isPublicRoute) {
     console.log(`🔄 Redirect: Authenticated user trying to access ${pathname}, going to home`, request.url);
     return NextResponse.redirect(new URL('/',
       request.url));
