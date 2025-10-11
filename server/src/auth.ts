@@ -2,7 +2,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
-
+import { nextCookies } from "better-auth/next-js";
 const prisma = new PrismaClient();
 const sendEmail = async (emailData: { to: string; subject: string; text: string }) => {
   // Implement with your email service (Nodemailer, SendGrid, Resend, etc.)
@@ -73,8 +73,8 @@ export const auth = betterAuth({
    advanced:{
     useSecureCookies: false,
     defaultCookieAttributes: {
-        sameSite: "lax",
-        secure: false,
+        sameSite: "none",
+        secure: true,
         httpOnly: true,
         
     },
@@ -87,6 +87,6 @@ export const auth = betterAuth({
    },
     api: {
         basePath: "/api/auth"
-    }
-
+    },
+    plugins: [nextCookies()],
 });
