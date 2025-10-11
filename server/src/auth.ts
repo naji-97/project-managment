@@ -68,11 +68,6 @@ export const auth = betterAuth({
     
     session: {
         expiresIn: 1 * 24 * 60 * 60, // 1 days
-        
-        // sameSite: "none",
-        // secure: true,
-        // httpOnly: true,
-    // domain: process.env.NODE_ENV === "production" ? "undefined" : undefined, // change this to your domain in production
 
     },
    advanced:{
@@ -80,10 +75,16 @@ export const auth = betterAuth({
         sameSite: "none",
         secure: true,
         httpOnly: true,
+        
         // domain: process.env.NODE_ENV === "production" ? "undefined" : undefined, // change this to your domain in production
     },
+    cookies: {
+        session_token:{
+            name: "auth.session_token",
+            
+        }
    },
-
+   },
     api: {
         basePath: "/api/auth"
     }
