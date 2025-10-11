@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", getUsers);
 router.post("/", postUser);
-router.get("/:cognitoId", getUser);
-router.patch("/:cognitoId", updateUser);
+router.get("/:id", getUser);
+router.patch("/:id", updateUser);
 
 export default router;

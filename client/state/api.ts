@@ -101,6 +101,7 @@ export const api = createApi({
             throw new Error( "No user in session");
           }
           const user = await sessionResponse.user;
+         console.log("user session", user);
          
           const userSub = user.id; // Assuming 'id' is the Cognito sub
           const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
