@@ -5,7 +5,7 @@ import {getSessionCookie} from "better-auth/cookies";
 
 export function middleware(request: NextRequest) {
  const sessionCookie = getSessionCookie(request, {
-    cookieName: 'auth.session_token',
+    cookieName: '__Secure-auth.session_token',
     // secureCookieName: '__Secure-auth.session_token', // For production with HTTPS);
  });
 
