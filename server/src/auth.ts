@@ -71,15 +71,16 @@ export const auth = betterAuth({
 
     },
    advanced:{
+    useSecureCookies: false,
     defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
+        sameSite: "lax",
+        secure: false,
         httpOnly: true,
         
     },
     cookies: {
         session_token:{
-            name: "auth.session_token",
+            name: "auth-session",
             
         }
    },
