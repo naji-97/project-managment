@@ -3,7 +3,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const sessionToken =  request.cookies.get('better-auth.session_token')?.value; // Fallback for development;
+  const allCookies = request.cookies.getAll();
+    allCookies.forEach(cookie => {
+    console.log(`Cookie: ${cookie.name} = ${cookie.value ? '***' + cookie.value.slice(-10) : 'empty'}`);
+  });
+
+  
+  const sessionToken =  request.cookies.get('auth.session_token')?.value|| request.cookies.get("__Secure-auth.session_token") // Fallback for development;
   console.log("this is session token",sessionToken)
   const { pathname } = request.nextUrl;
 

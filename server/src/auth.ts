@@ -76,7 +76,6 @@ export const auth = betterAuth({
         secure: true,
         httpOnly: true,
         
-        // domain: process.env.NODE_ENV === "production" ? "undefined" : undefined, // change this to your domain in production
     },
     cookies: {
         session_token:{
