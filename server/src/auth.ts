@@ -71,16 +71,17 @@ export const auth = betterAuth({
 
     },
    advanced:{
-    useSecureCookies: false,
+    useSecureCookies: process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
     defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
-        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
+        httpOnly: process.env.NODE_ENV === "production", // Set to true in production
         
     },
     cookies: {
         session_token:{
             name: "auth-session",
+            
             
         }
    },
