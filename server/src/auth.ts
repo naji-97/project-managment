@@ -71,11 +71,11 @@ export const auth = betterAuth({
 
     },
    advanced:{
-    useSecureCookies:false, // Set to true in production (requires HTTPS)
+    useSecureCookies: true, // Set to true in production (requires HTTPS)
     defaultCookieAttributes: {
-        sameSite: "lax",
-        secure: false, // Set to true in production (requires HTTPS)
-        httpOnly: true, // Set to true in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
+        httpOnly: false, // Set to true in production
         
     },
     cookies: {
