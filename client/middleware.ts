@@ -1,16 +1,17 @@
 // client/middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import {getSessionCookie} from "better-auth/cookies";
+// import {getSessionCookie} from "better-auth/cookies";
 
 export function middleware(request: NextRequest) {
 //  const sessionCookie = getSessionCookie(request, {
 //     cookieName: process.env.NODE_ENV === 'production' ?'__Secure-auth-session': 'auth-session' 
 //  });
  console.log("All cookies:", request.cookies);
- const cookieName = process.env.NODE_ENV === 'production'
-    ? '__Secure-auth-session'
-    : 'auth-session';
+ const cookieName ="auth-session"
+  // process.env.NODE_ENV === 'production'
+  //   ? '__Secure-auth-session'
+  //   : 'auth-session';
 const sessionCookie = request.cookies.get(cookieName)?.value;
 
   console.log("this is session token",sessionCookie)
