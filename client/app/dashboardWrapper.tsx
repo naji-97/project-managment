@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 import 'react-toastify/dist/ReactToastify.css';
 import {AuthProvider} from "./AuthProvider";
 import { useGetAuthUserQuery } from "@/state/api";
+import AuthGuard from "@/components/AuthGuard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const isSidebarCollapsed =useAppSelector(
@@ -45,9 +46,12 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
         <StoreProvider>
             {/* <Authenticator.Provider> */}
+
+            <AuthGuard>
             <AuthProvider>
                 <DashboardLayout>{children}</DashboardLayout>
             </AuthProvider>
+            </AuthGuard>
             {/* </Authenticator.Provider> */}
         </StoreProvider>
     );
