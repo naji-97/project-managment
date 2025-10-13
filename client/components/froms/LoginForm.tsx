@@ -38,7 +38,7 @@ export default function LoginForm() {
 
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
-    // const redirectTo = searchParams.get('from');
+    const redirectTo = searchParams.get('from');
     
     
     // Initialize react-hook-form with zod validation
@@ -66,12 +66,12 @@ export default function LoginForm() {
                 console.log("Login result", result);
 
                 // Redirect to the original page or home
-                // const redirectPath = redirectTo || '/';
+                const redirectPath = redirectTo || '/';
                 
                 // Use setTimeout to show the success message briefly
-                // setTimeout(() => {
-                //     window.location.href = redirectPath;
-                // }, 500);
+                setTimeout(() => {
+                    window.location.href = redirectPath;
+                }, 500);
             }
         } catch (error) {
             toast.error('An error occurred during login');

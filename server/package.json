@@ -9,6 +9,7 @@
     "start": "tsx src/index.js",
     "build": "rm -rf dist && npx tsc",
     "seed": "tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:reset": "npx prisma migrate reset --force",
     "db:migrate": "npx prisma migrate deploy",
     "db:generate": "npx prisma generate",

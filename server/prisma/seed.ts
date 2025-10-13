@@ -1,205 +1,297 @@
-import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import path from "path";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function deleteAllData() {
-  console.log("🗑️  Clearing all data...");
-  
-  // Disable foreign key checks (PostgreSQL)
-  await prisma.$executeRaw`SET session_replication_role = 'replica';`;
-
-  const deletionOrder = [
-    "taskAssignment",
-    "attachment", 
-    "comment",
-    "task",
-    "projectTeam",
-    "project",
-    "team",
-    "user",
-    "session",
-    "account",
-    "verification"
-  ];
-
-  for (const modelName of deletionOrder) {
-    const capitalizedModelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
-    const model: any = prisma[capitalizedModelName as keyof typeof prisma];
-    
-    if (model && typeof model.deleteMany === 'function') {
-      try {
-        await model.deleteMany({});
-        console.log(`✅ Cleared data from ${capitalizedModelName}`);
-      } catch (error) {
-        console.error(`❌ Error clearing data from ${capitalizedModelName}:`, error);
-      }
-    }
-  }
-
-  // Re-enable foreign key checks
-  await prisma.$executeRaw`SET session_replication_role = 'origin';`;
-  console.log("✅ All data cleared successfully");
-}
-
 async function main() {
-  const dataDirectory = path.join(process.cwd(),"prisma", "seedData");
+  console.log('🌱 Starting seed...');
 
-  await deleteAllData();
+  // Clear existing data (optional - be careful in production!)
+  await prisma.verification.deleteMany();
+  await prisma.account.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.comment.deleteMany();
+  await prisma.attachment.deleteMany();
+  await prisma.taskAssignment.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.projectTeam.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.team.deleteMany();
+  // await prisma.user.deleteMany();
 
-  // PHASE 1: Create base records (no foreign key dependencies)
-  console.log("\n📦 PHASE 1: Creating base records...");
-  
-  // First, create teams and projects (they don't depend on anything)
-  const teamData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "team.json"), "utf-8"));
-  const projectData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "project.json"), "utf-8"));
-  
-  await prisma.team.createMany({ data: teamData });
-  console.log(`✅ Created ${teamData.length} teams`);
-  
-  await prisma.project.createMany({ data: projectData });
-  console.log(`✅ Created ${projectData.length} projects`);
-
-  // PHASE 2: Create users without team relationships
-  console.log("\n👥 PHASE 2: Creating users...");
-  
-  const userData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "user.json"), "utf-8"));
-  
-  // Create users without teamId first
-  const usersWithoutTeam = userData.map((user: any) => {
-    const { teamId, ...userWithoutTeam } = user;
-    return userWithoutTeam;
+  // Create Teams
+  console.log('Creating teams...');
+  const teams = await prisma.team.createManyAndReturn({
+    data: [
+      { teamName: 'Frontend Development' },
+      { teamName: 'Backend Development' },
+      { teamName: 'DevOps & Infrastructure' },
+      { teamName: 'Quality Assurance' },
+      { teamName: 'Product Management' },
+    ],
   });
-  
-  await prisma.user.createMany({ data: usersWithoutTeam });
-  console.log(`✅ Created ${usersWithoutTeam.length} users (without teams)`);
 
-  // PHASE 3: Create tasks (they depend on users and projects)
-  console.log("\n📝 PHASE 3: Creating tasks...");
-  
-  const taskData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "task.json"), "utf-8"));
-  
-  // Verify that all referenced users and projects exist
-  const existingUsers = await prisma.user.findMany({ select: { id: true } });
-  const existingProjects = await prisma.project.findMany({ select: { id: true } });
-  
-  const existingUserIds = existingUsers.map(u => u.id);
-  const existingProjectIds = existingProjects.map(p => p.id);
-  
-  const validTasks = taskData.filter((task: any) => 
-    existingUserIds.includes(task.authorUserId) && 
-    existingProjectIds.includes(task.projectId) &&
-    (!task.assignedUserId || existingUserIds.includes(task.assignedUserId))
-  );
-  
-  if (validTasks.length !== taskData.length) {
-    console.warn(`⚠️  Filtered out ${taskData.length - validTasks.length} tasks with invalid references`);
-  }
-  
-  await prisma.task.createMany({ data: validTasks });
-  console.log(`✅ Created ${validTasks.length} tasks`);
+  // Create Users
+  console.log('Creating users...');
+  const users = await prisma.user.createManyAndReturn({
+    data: [
+      {
+        id: 'user_1',
+        username: 'alice_dev',
+        email: 'alice@company.com',
+        name: 'Alice Johnson',
+        teamId: teams[0].id,
+        profilePictureUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      },
+      {
+        id: 'user_2',
+        username: 'bob_backend',
+        email: 'bob@company.com',
+        name: 'Bob Smith',
+        teamId: teams[1].id,
+        profilePictureUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      },
+      {
+        id: 'user_3',
+        username: 'carol_qa',
+        email: 'carol@company.com',
+        name: 'Carol Davis',
+        teamId: teams[3].id,
+        profilePictureUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+      },
+      {
+        id: 'user_4',
+        username: 'david_devops',
+        email: 'david@company.com',
+        name: 'David Wilson',
+        teamId: teams[2].id,
+        profilePictureUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      },
+      {
+        id: 'user_5',
+        username: 'eva_pm',
+        email: 'eva@company.com',
+        name: 'Eva Martinez',
+        teamId: teams[4].id,
+        profilePictureUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+      },
+    ],
+  });
 
-  // PHASE 4: Create project teams (depend on teams and projects)
-  console.log("\n🔗 PHASE 4: Creating project teams...");
-  
-  const projectTeamData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "projectTeam.json"), "utf-8"));
-  
-  const validProjectTeams = projectTeamData.filter((pt: any) => 
-    existingProjectIds.includes(pt.projectId) && 
-    teamData.some((team: any) => team.id === pt.teamId)
-  );
-  
-  if (validProjectTeams.length !== projectTeamData.length) {
-    console.warn(`⚠️  Filtered out ${projectTeamData.length - validProjectTeams.length} project teams with invalid references`);
-  }
-  
-  await prisma.projectTeam.createMany({ data: validProjectTeams });
-  console.log(`✅ Created ${validProjectTeams.length} project teams`);
+  // Create Projects
+  console.log('Creating projects...');
+  const projects = await prisma.project.createManyAndReturn({
+    data: [
+      {
+        name: 'E-commerce Platform Redesign',
+        description: 'Complete redesign of our e-commerce platform with modern UI/UX and improved performance',
+        startDate: new Date('2024-01-15'),
+        endDate: new Date('2024-06-30'),
+      },
+      {
+        name: 'Mobile App Development',
+        description: 'Build a cross-platform mobile application for customer engagement',
+        startDate: new Date('2024-02-01'),
+        endDate: new Date('2024-08-15'),
+      },
+      {
+        name: 'API Microservices Migration',
+        description: 'Migrate from monolithic architecture to microservices',
+        startDate: new Date('2024-03-01'),
+        endDate: new Date('2024-09-30'),
+      },
+      {
+        name: 'Data Analytics Dashboard',
+        description: 'Develop a comprehensive analytics dashboard for business intelligence',
+        startDate: new Date('2024-01-20'),
+        endDate: new Date('2024-05-30'),
+      },
+    ],
+  });
 
-  // PHASE 5: Update users with team relationships
-  console.log("\n🔄 PHASE 5: Updating user teams...");
-  
-  let updatedUsers = 0;
-  for (const user of userData) {
-    if (user.teamId) {
-      // Verify the team exists
-      const teamExists = teamData.some((team: any) => team.id === user.teamId);
-      if (teamExists) {
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { teamId: user.teamId }
-        });
-        updatedUsers++;
-      }
-    }
-  }
-  console.log(`✅ Updated ${updatedUsers} users with team assignments`);
+  // Link Projects to Teams
+  console.log('Linking projects to teams...');
+  await prisma.projectTeam.createMany({
+    data: [
+      // E-commerce Platform - Multiple teams
+      { projectId: projects[0].id, teamId: teams[0].id }, // Frontend
+      { projectId: projects[0].id, teamId: teams[1].id }, // Backend
+      { projectId: projects[0].id, teamId: teams[3].id }, // QA
+      
+      // Mobile App - Multiple teams
+      { projectId: projects[1].id, teamId: teams[0].id }, // Frontend
+      { projectId: projects[1].id, teamId: teams[1].id }, // Backend
+      { projectId: projects[1].id, teamId: teams[2].id }, // DevOps
+      
+      // API Migration - Backend & DevOps
+      { projectId: projects[2].id, teamId: teams[1].id }, // Backend
+      { projectId: projects[2].id, teamId: teams[2].id }, // DevOps
+      
+      // Analytics Dashboard - Frontend & Backend
+      { projectId: projects[3].id, teamId: teams[0].id }, // Frontend
+      { projectId: projects[3].id, teamId: teams[1].id }, // Backend
+    ],
+  });
 
-  // PHASE 6: Create task assignments (depend on users and tasks)
-  console.log("\n📋 PHASE 6: Creating task assignments...");
-  
-  const taskAssignmentData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "taskAssignment.json"), "utf-8"));
-  const existingTasks = await prisma.task.findMany({ select: { id: true } });
-  const existingTaskIds = existingTasks.map(t => t.id);
-  
-  const validTaskAssignments = taskAssignmentData.filter((ta: any) => 
-    existingUserIds.includes(ta.userId) && 
-    existingTaskIds.includes(ta.taskId)
-  );
-  
-  if (validTaskAssignments.length !== taskAssignmentData.length) {
-    console.warn(`⚠️  Filtered out ${taskAssignmentData.length - validTaskAssignments.length} task assignments with invalid references`);
-  }
-  
-  await prisma.taskAssignment.createMany({ data: validTaskAssignments });
-  console.log(`✅ Created ${validTaskAssignments.length} task assignments`);
+  // Create Tasks
+  console.log('Creating tasks...');
+  const tasks = await prisma.task.createManyAndReturn({
+    data: [
+      // E-commerce Platform Tasks
+      {
+        title: 'Design New Product Page',
+        description: 'Create wireframes and mockups for the new product detail page',
+        status: 'completed',
+        priority: 'high',
+        tags: 'design,ui,ux',
+        startDate: new Date('2024-01-20'),
+        dueDate: new Date('2024-02-15'),
+        points: 5,
+        projectId: projects[0].id,
+        authorUserId: users[4].id, // Eva (PM)
+        assignedUserId: users[0].id, // Alice (Frontend)
+      },
+      {
+        title: 'Implement Shopping Cart',
+        description: 'Develop the shopping cart functionality with add/remove items',
+        status: 'in-progress',
+        priority: 'high',
+        tags: 'frontend,functionality',
+        startDate: new Date('2024-02-01'),
+        dueDate: new Date('2024-03-15'),
+        points: 8,
+        projectId: projects[0].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[0].id,
+      },
+      {
+        title: 'Payment Integration',
+        description: 'Integrate Stripe payment gateway',
+        status: 'todo',
+        priority: 'medium',
+        tags: 'backend,payments',
+        startDate: new Date('2024-03-01'),
+        dueDate: new Date('2024-04-10'),
+        points: 13,
+        projectId: projects[0].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[1].id, // Bob (Backend)
+      },
 
-  // PHASE 7: Create attachments and comments (depend on users and tasks)
-  console.log("\n📎 PHASE 7: Creating attachments and comments...");
-  
-  const attachmentData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "attachment.json"), "utf-8"));
-  const commentData = JSON.parse(fs.readFileSync(path.join(dataDirectory, "comment.json"), "utf-8"));
-  
-  const validAttachments = attachmentData.filter((att: any) => 
-    existingUserIds.includes(att.uploadedById) && 
-    existingTaskIds.includes(att.taskId)
-  );
-  
-  const validComments = commentData.filter((comment: any) => 
-    existingUserIds.includes(comment.userId) && 
-    existingTaskIds.includes(comment.taskId)
-  );
-  
-  if (validAttachments.length !== attachmentData.length) {
-    console.warn(`⚠️  Filtered out ${attachmentData.length - validAttachments.length} attachments with invalid references`);
-  }
-  
-  if (validComments.length !== commentData.length) {
-    console.warn(`⚠️  Filtered out ${commentData.length - validComments.length} comments with invalid references`);
-  }
-  
-  await prisma.attachment.createMany({ data: validAttachments });
-  await prisma.comment.createMany({ data: validComments });
-  
-  console.log(`✅ Created ${validAttachments.length} attachments`);
-  console.log(`✅ Created ${validComments.length} comments`);
+      // Mobile App Tasks
+      {
+        title: 'Set Up React Native Project',
+        description: 'Initialize React Native project with TypeScript and navigation',
+        status: 'completed',
+        priority: 'high',
+        tags: 'setup,mobile',
+        startDate: new Date('2024-02-05'),
+        dueDate: new Date('2024-02-20'),
+        points: 3,
+        projectId: projects[1].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[0].id,
+      },
+      {
+        title: 'User Authentication Flow',
+        description: 'Implement login/signup screens with authentication',
+        status: 'in-progress',
+        priority: 'high',
+        tags: 'auth,security',
+        startDate: new Date('2024-02-15'),
+        dueDate: new Date('2024-03-20'),
+        points: 8,
+        projectId: projects[1].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[1].id,
+      },
 
-  console.log("\n🎉 Database seeded successfully!");
-  console.log("Summary:");
-  console.log(`- Teams: ${teamData.length}`);
-  console.log(`- Projects: ${projectData.length}`);
-  console.log(`- Users: ${usersWithoutTeam.length}`);
-  console.log(`- Tasks: ${validTasks.length}`);
-  console.log(`- Project Teams: ${validProjectTeams.length}`);
-  console.log(`- Task Assignments: ${validTaskAssignments.length}`);
-  console.log(`- Attachments: ${validAttachments.length}`);
-  console.log(`- Comments: ${validComments.length}`);
+      // API Migration Tasks
+      {
+        title: 'Design Microservices Architecture',
+        description: 'Plan the microservices structure and communication patterns',
+        status: 'completed',
+        priority: 'high',
+        tags: 'architecture,planning',
+        startDate: new Date('2024-03-05'),
+        dueDate: new Date('2024-03-25'),
+        points: 5,
+        projectId: projects[2].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[1].id,
+      },
+      {
+        title: 'Containerize Services with Docker',
+        description: 'Create Docker containers for each microservice',
+        status: 'in-progress',
+        priority: 'medium',
+        tags: 'docker,devops',
+        startDate: new Date('2024-03-20'),
+        dueDate: new Date('2024-04-30'),
+        points: 13,
+        projectId: projects[2].id,
+        authorUserId: users[4].id,
+        assignedUserId: users[3].id, // David (DevOps)
+      },
+    ],
+  });
+
+  // Create Task Assignments (additional assignments)
+  console.log('Creating task assignments...');
+  await prisma.taskAssignment.createMany({
+    data: [
+      { userId: users[2].id, taskId: tasks[0].id }, // Carol assigned to design review
+      { userId: users[3].id, taskId: tasks[4].id }, // David helping with auth security
+    ],
+  });
+
+  // Create Comments
+  console.log('Creating comments...');
+  await prisma.comment.createMany({
+    data: [
+      {
+        text: 'The initial designs look great! Can we add more product image variants?',
+        taskId: tasks[0].id,
+        userId: users[2].id, // Carol (QA)
+      },
+      {
+        text: 'I\'ve started working on the cart state management. Should have a prototype by next week.',
+        taskId: tasks[1].id,
+        userId: users[0].id, // Alice
+      },
+      {
+        text: 'Make sure to follow our security guidelines for the payment integration.',
+        taskId: tasks[2].id,
+        userId: users[3].id, // David (DevOps)
+      },
+    ],
+  });
+
+  // Create Attachments
+  console.log('Creating attachments...');
+  await prisma.attachment.createMany({
+    data: [
+      {
+        fileURL: 'https://example.com/files/design-specs.pdf',
+        fileName: 'Design Specifications.pdf',
+        taskId: tasks[0].id,
+        uploadedById: users[4].id, // Eva
+      },
+      {
+        fileURL: 'https://example.com/files/api-docs.zip',
+        fileName: 'API Documentation.zip',
+        taskId: tasks[2].id,
+        uploadedById: users[1].id, // Bob
+      },
+    ],
+  });
+
+  console.log('✅ Seed completed successfully!');
+  console.log(`Created: ${teams.length} teams, ${users.length} users, ${projects.length} projects, ${tasks.length} tasks`);
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seeding failed:", e);
+    console.error('❌ Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {

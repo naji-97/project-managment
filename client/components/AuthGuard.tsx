@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useGetAuthUserQuery } from '@/state/api';
+import GridLoader from 'react-spinners/GridLoader';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const { data: currentUser, isLoading, error } = useGetAuthUserQuery({});
@@ -27,8 +28,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         }
     }, [currentUser, isLoading, isPublicRoute, pathname, router]);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (!currentUser?.user && !isPublicRoute) return <div>Redirecting...</div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader color="#b2ced9" size={20} speedMultiplier={0.7} /></div>;;
+    if (!currentUser?.user && !isPublicRoute) return <div className="flex items-center justify-center h-full">Redirecting...</div>;;
 
     return <>{children}</>;
 }
