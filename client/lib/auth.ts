@@ -6,6 +6,7 @@ export interface User {
   email: string;
   name: string;
   username: string;
+  profilePictureUrl: string;
 }
 
 export interface AuthResponse {
@@ -18,7 +19,7 @@ export interface AuthResponse {
 }
 
 export const authAPI = {
-  signUp: async (email: string, password: string, name: string, username: string) => {
+  signUp: async (email: string, password: string, name: string, username: string, ) => {
     const response = await fetch(`${API_BASE_URL}/api/auth/sign-up/email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -61,7 +62,7 @@ export const authAPI = {
       
       console.log("response status", response.status);
       console.log("response headers", Object.fromEntries(response.headers.entries()));
-      console.log("response cookies", response.headers.get('set-cookie'));
+      console.log("response cookies", response)
       
       const data = await response.json();
       console.log("session data", data);

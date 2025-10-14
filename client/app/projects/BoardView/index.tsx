@@ -163,7 +163,7 @@ const Task = ({ task }: TaskProps) => {
             {priority}
         </div>
     );
-// console.log(task.attachments, 'This is TAASKS ATTACHMENTS');
+console.log(task.assignee, 'This is TAASKS ATTACHMENTS');
 
     return (
         <div
@@ -178,7 +178,7 @@ const Task = ({ task }: TaskProps) => {
                 
                 <Image
 
-                    src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${task.attachments[0].fileURL}`}
+                    src={`${task.attachments[0].fileURL}`}
                     alt={task.attachments[0].fileName}
                     width={400}
                     height={200}
@@ -231,7 +231,7 @@ const Task = ({ task }: TaskProps) => {
                         {task.assignee && (
                             <Image
                                 key={`${task.assignee.id}`}
-                                src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${task.assignee.profilePictureUrl!}`}
+                                src={`/p1.jpeg`}
                                 alt={task.assignee.username}
                                 width={30}
                                 height={30}
@@ -242,7 +242,7 @@ const Task = ({ task }: TaskProps) => {
                         {task.author && task.author.id !== task.assignee?.id && (
                             <Image
                                 key={`${task.author.id}`}
-                                src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${task.author.profilePictureUrl!}`}
+                                src={`${task.author.profilePictureUrl!}`}
                                 alt={task.author.username}
                                 width={30}
                                 height={30}

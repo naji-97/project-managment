@@ -6,9 +6,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pm-s3-iamges.s3.us-east-1.amazonaws.com",
-        port: "",
-        pathname: "/**",
+        hostname: "images.unsplash.com",
+      },
+       {
+        protocol: "https", 
+        hostname: "www.freepik.com",
       },
     ],
   },

@@ -22,19 +22,39 @@ const columns: GridColDef[] = [
         field: "profilePictureUrl",
         headerName: "Profile Picture",
         width: 100,
-        renderCell: (params) => (
+        renderCell: (params) => {
+            console.log("this is the params" ,params);
+            const { value: profileUrl, row: { username } } = params;
+            if (!profileUrl) {
+                return (
+                    <div className="flex h-full w-full items-center justify-center">
+                    <div className="h-9 w-9 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-sm font-medium text-gray-600">
+                            {username?.charAt(0)?.toUpperCase() || '?'}
+                        </span>
+                    </div>
+                    </div>
+                );
+            }
+            const imageSrc = profileUrl.startsWith('http')
+                ? profileUrl
+                : `/${profileUrl}`
+
+            return (
+                
             <div className="flex h-full w-full items-center justify-center">
                 <div className="h-9 w-9">
                     <Image
-                        src={`https://pm-s3-iamges.s3.us-east-1.amazonaws.com/${params.value}`}
-                        alt={params.row.username}
+                        src={imageSrc}
+                        alt={username}
                         width={100}
                         height={50}
                         className="h-full rounded-full object-cover"
                     />
                 </div>
             </div>
-        ),
+            )
+        },
     },
 ];
 

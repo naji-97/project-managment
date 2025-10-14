@@ -16,13 +16,13 @@ async function main() {
   await prisma.projectTeam.deleteMany();
   await prisma.project.deleteMany();
   await prisma.team.deleteMany();
-  // await prisma.user.deleteMany();
+  await prisma.user.deleteMany();
 
   // Create Teams
   console.log('Creating teams...');
   const teams = await prisma.team.createManyAndReturn({
     data: [
-      { teamName: 'Frontend Development' },
+      { teamName: 'Frontend Development', },
       { teamName: 'Backend Development' },
       { teamName: 'DevOps & Infrastructure' },
       { teamName: 'Quality Assurance' },
@@ -40,7 +40,7 @@ async function main() {
         email: 'alice@company.com',
         name: 'Alice Johnson',
         teamId: teams[0].id,
-        profilePictureUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+        profilePictureUrl: 'p1.jpeg',
       },
       {
         id: 'user_2',
@@ -48,7 +48,7 @@ async function main() {
         email: 'bob@company.com',
         name: 'Bob Smith',
         teamId: teams[1].id,
-        profilePictureUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+        profilePictureUrl: 'p2.jpeg',
       },
       {
         id: 'user_3',
@@ -56,7 +56,7 @@ async function main() {
         email: 'carol@company.com',
         name: 'Carol Davis',
         teamId: teams[3].id,
-        profilePictureUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+        profilePictureUrl: 'p3.jpeg',
       },
       {
         id: 'user_4',
@@ -64,7 +64,7 @@ async function main() {
         email: 'david@company.com',
         name: 'David Wilson',
         teamId: teams[2].id,
-        profilePictureUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+        profilePictureUrl: 'p4.jpeg',
       },
       {
         id: 'user_5',
@@ -72,9 +72,30 @@ async function main() {
         email: 'eva@company.com',
         name: 'Eva Martinez',
         teamId: teams[4].id,
-        profilePictureUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+        profilePictureUrl: 'p5.jpeg',
       },
     ],
+  });
+
+  await prisma.team.update({
+    where: { id: teams[0].id },
+    data: { productOwnerUserId: users[0].id, projectManagerUserId: users[1].id },
+  });
+  await prisma.team.update({
+    where: { id: teams[1].id },
+    data: { productOwnerUserId: users[1].id, projectManagerUserId: users[4].id },
+  });
+  await prisma.team.update({
+    where: { id: teams[2].id },
+    data: { productOwnerUserId: users[3].id, projectManagerUserId: users[4].id },
+  });
+  await prisma.team.update({
+    where: { id: teams[3].id },
+    data: { productOwnerUserId: users[2].id, projectManagerUserId: users[4].id },
+  });
+  await prisma.team.update({
+    where: { id: teams[4].id },
+    data: { productOwnerUserId: users[4].id, projectManagerUserId: users[4].id },
   });
 
   // Create Projects

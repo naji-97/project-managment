@@ -14,25 +14,25 @@ datasource db {
 }
 
 model User {
-  id            String              @id @default(cuid())  @unique
-  username        String         @unique
+  id                String   @id @unique @default(cuid())
+  username          String   @unique
   profilePictureUrl String?
   teamId            Int?
-  email             String         @unique
+  email             String   @unique
   name              String
-  emailVerified     Boolean          @default(false)
+  emailVerified     Boolean  @default(false)
   image             String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @default(now()) @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
 
-  authoredTasks     Task[]           @relation("TaskAuthor")
-  assignedTasks     Task[]           @relation("TaskAssignee")
-  taskAssignments   TaskAssignment[]
-  attachments       Attachment[]
-  comments          Comment[]
-  team              Team?            @relation(fields: [teamId], references: [id]) //
-  sessions          Session[]
-  accounts          Account[]
+  authoredTasks   Task[]           @relation("TaskAuthor")
+  assignedTasks   Task[]           @relation("TaskAssignee")
+  taskAssignments TaskAssignment[]
+  attachments     Attachment[]
+  comments        Comment[]
+  team            Team?            @relation(fields: [teamId], references: [id]) //
+  sessions        Session[]
+  accounts        Account[]
 
   @@map("user")
 }
@@ -40,8 +40,8 @@ model User {
 model Team {
   id                   Int           @id @default(autoincrement())
   teamName             String
-  productOwnerUserId   Int?
-  projectManagerUserId Int?
+  productOwnerUserId   String?
+  projectManagerUserId String?
   projectTeams         ProjectTeam[]
   user                 User[]
 }
@@ -87,7 +87,7 @@ model Task {
 }
 
 model TaskAssignment {
-  id     Int @id @default(autoincrement())
+  id     Int    @id @default(autoincrement())
   userId String
   taskId Int
 

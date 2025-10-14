@@ -169,12 +169,11 @@ export const api = createApi({
       query: (query) => `search?query=${query}`,
     }),
     // Additional endpoints can be defined here
-    updateUser: build.mutation<{ Message: string; updatedUser: User },
-    {cognitoId: string; username?: string; email?: string; teamId?:number; profilePictureUrl?: string}>({
-      query: ({cognitoId, ...patchs}) => ({
-        url: `users/${cognitoId}`,
+    updateUser: build.mutation({
+      query: ({id, ...updates}) => ({
+        url: `users/${id}`,
         method: "PATCH",
-        body: patchs,
+        body: updates,
       }),
       invalidatesTags: ["Users"],
     }),

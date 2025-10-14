@@ -26,8 +26,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
-    name: z.string().min(2, "Firstname must be at least 2 characters"),
-    username: z.string().min(2, "Lastname must be at least 2 characters"),
+    firstName: z.string().min(2, "Firstname must be at least 2 characters"),
+    lastName: z.string().min(2, "Lastname must be at least 2 characters"),
+    username: z.string().min(2, "Username must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
     password: z
         .string()
@@ -46,10 +47,11 @@ export default function SignupForm() {
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            name: "",
-            username: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
+            username: "",
         },
     });
 
@@ -59,12 +61,13 @@ export default function SignupForm() {
     const onSubmit = async (data: RegisterFormValues) => {
         console.log(data);
         setIsSubmitting(true);
+        const fullName = `${data.firstName} ${data.lastName}`
 
         try {
             const result = await authAPI.signUp(
                 data.email,
                 data.password,
-                data.name,
+                fullName,
                 data.username
             );
             console.log('signup result', result);
@@ -77,9 +80,9 @@ export default function SignupForm() {
             } else {
                 toast.success('Account created successfully! Redirecting...');
                 // Redirect or update app state
-                // setTimeout(() => {
-                //     window.location.href = '/';
-                // }, 500);
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 500);
             }
         } catch (error) {
             toast.error('An error occurred during signup');
@@ -117,15 +120,30 @@ export default function SignupForm() {
 
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                            <div className="grid grid-cols-2 gap-3">
+                            {/* <div className="grid grid-cols-2 gap-3"> */}
+                               
+
                                 <FormField
                                     control={form.control}
-                                    name="username"
+                                    name="firstName"
                                     render={({ field }) => (
                                         <FormItem className="space-y-2">
-                                            <FormLabel>User name </FormLabel>
+                                            <FormLabel>First name</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type='text' placeholder='johndoe'/>
+                                                <Input {...field} type='text' placeholder='John '/>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="lastName"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-2">
+                                            <FormLabel>Last name</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} type='text' placeholder=' Doe'/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -134,18 +152,18 @@ export default function SignupForm() {
 
                                 <FormField
                                     control={form.control}
-                                    name="name"
+                                    name="username"
                                     render={({ field }) => (
                                         <FormItem className="space-y-2">
-                                            <FormLabel>Full name</FormLabel>
+                                            <FormLabel>User name </FormLabel>
                                             <FormControl>
-                                                <Input {...field} type='text' placeholder='John Doe'/>
+                                                <Input {...field} type='text' placeholder='johndoe' />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                            </div>
+                            {/* </div> */}
 
                             <FormField
                                 control={form.control}

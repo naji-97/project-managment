@@ -83,8 +83,8 @@ export const updateUser = async (req: Request, res: Response) => {
     const updatedUser = await prisma.user.update({
       where: { id: id },
       data: {
-        name: username ?? isUserExists.name,
-        email: email ?? isUserExists.email,
+        username: username ,
+        email: email ,
         profilePictureUrl: profilePictureUrl ?? isUserExists.profilePictureUrl,
 
         

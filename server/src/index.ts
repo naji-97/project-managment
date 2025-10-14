@@ -23,7 +23,7 @@ app.use(
       "https://project-managment-lilac.vercel.app",
       "https://*.vercel.app"
     ], // Your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })

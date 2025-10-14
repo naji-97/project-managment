@@ -46,7 +46,14 @@ export const auth = betterAuth({
                 unique: false, // usernames should be unique
                 required: true, // make it true if you want to force users to set a username
                 input:true
-            }
+            },
+            profilePictureUrl: {
+                type: "string",
+                unique: false, // usernames should be unique
+                required: false, // make it true if you want to force users to set a username
+                input:false,
+                defaultValue: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&h=150&q=80"
+            },
         }
     },
 
