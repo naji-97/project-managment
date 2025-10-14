@@ -12,10 +12,13 @@ import userRoutes from "./routes/userRoutes";
 import teamRoutes from "./routes/teamRoutes";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./auth";
+import multer from "multer";
+import { updateUser } from "./controllers/userController"; "../controllers/userController";
 
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
+
 app.use(
   cors({
     origin: [
@@ -60,26 +63,18 @@ app.get("/api/me", async (req, res) => {
 });
 
 // Your other API routes
-app.get("/api/me", async (req, res) => {
-  // Add detailed logging
-  console.log('[/api/me] Request origin:', req.headers.origin);
-  console.log('[/api/me] Cookies received:', req.headers.cookie);
 
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
-  console.log('[/api/me] Session object:', session); // This will show if the session is found on the server
-
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  return res.json(session);
-});
 /* ROUTES */
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+});
 app.get("/", (req, res) => {
   res.send("This is home route");
 });
-
+app.patch("/users/:id", upload.single('profilePicture'), updateUser);
 app.use("/projects", projectRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/search", searchRoutes);

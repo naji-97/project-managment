@@ -170,10 +170,10 @@ export const api = createApi({
     }),
     // Additional endpoints can be defined here
     updateUser: build.mutation({
-      query: ({id, ...updates}) => ({
+      query: ({id, formData}) => ({
         url: `users/${id}`,
         method: "PATCH",
-        body: updates,
+        body: formData,
       }),
       invalidatesTags: ["Users"],
     }),

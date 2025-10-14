@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useGetAuthUserQuery, useUpdateUserMutation } from "@/state/api";
 import { useAuth } from "@/app/AuthProvider";
 import Header from "@/components/header/Header";
@@ -19,7 +19,9 @@ export default function SettingsPage() {
     });
 
     const [message, setMessage] = useState({ type: "", text: "" });
-
+    const [selectFile, setSelectFile] = useState<File | null>(null);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const imagePreview = selectFile ? URL.createObjectURL(selectFile) : null;
     // Populate form with current user data
     useEffect(() => {
         if (authData?.userDetails) {
@@ -51,18 +53,26 @@ export default function SettingsPage() {
         const fullName=`${formData.firstName} ${formData.lastName}`
 
         try {
+            const formDataToSend = new FormData();
+            formDataToSend.append("username", formData.username);
+            formDataToSend.append("email", formData.email);
+            formDataToSend.append("name", fullName);
+            if(selectFile){
+                formDataToSend.append("profilePicture", selectFile);
+            }
             const result = await updateUser({
                 id: authData?.userSub || "",
-                username: formData.username,
-                email: formData.email,
-                name: fullName,
-                profilePictureUrl: formData.profilePictureUrl
+                formData: formDataToSend
             }).unwrap();
 
             setMessage({
                 type: "success",
                 text: result.message || "Profile updated successfully!"
             });
+            setSelectFile(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
           
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -80,6 +90,17 @@ export default function SettingsPage() {
             </div>
         );
     }
+    const handleRemoveImage = () => {
+        setSelectFile(null);
+        setFormData({ ...formData, profilePictureUrl: "" });
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectFile(file);
+        }
+    };
 
     const user = authData?.userDetails;
 
@@ -128,6 +149,8 @@ export default function SettingsPage() {
                         <p className="text-gray-600 dark:text-gray-400">{user?.username}</p>
                         <p className="text-gray-600 dark:text-gray-400">{user?.email}</p>
                     </div>
+
+                    
                 </div>
             </div>
 
@@ -146,7 +169,7 @@ export default function SettingsPage() {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
                     <div>
                         <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             First Name
@@ -205,46 +228,64 @@ export default function SettingsPage() {
                         />
                     </div>
 
+                    {/* File Upload Section */}
                     <div>
-                        <label htmlFor="profilePictureUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Profile Picture URL
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Profile Picture
                         </label>
-                        <input
-                            type="url"
-                            id="profilePictureUrl"
-                            name="profilePictureUrl"
-                            value={formData.profilePictureUrl}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                            placeholder="Enter profile picture URL"
-                        />
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            Enter a direct image URL or leave empty to use default avatar
-                        </p>
-                    </div>
 
-                    {/* Preview of new profile picture */}
-                    {formData.profilePictureUrl && (
-                        <div>
-                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Preview:
-                            </p>
-                            <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200">
-                                <img
-                                    src={formData.profilePictureUrl}
-                                    alt="Preview"
-                                    className="h-full w-full object-cover"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = 'none';
-                                        // e.currentTarget.nextSibling?.style.display = 'flex';
-                                    }}
+                        <div className="flex items-center space-x-4">
+                            {/* Current/Preview Image */}
+                            <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                {imagePreview || user?.profilePictureUrl ? (
+                                    <img
+                                        src={imagePreview || user?.profilePictureUrl}
+                                        alt="Preview"
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="h-full w-full flex items-center justify-center bg-gray-300">
+                                        <span className="text-sm font-bold text-gray-600">
+                                            {user?.username?.charAt(0)?.toUpperCase() || '?'}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Upload Controls */}
+                            <div className="flex-1">
+                                <input
+                                    ref={fileInputRef}
+                                    id="profilePicture"
+                                    title="pofilePicture"
+                                    type="file"
+                                    name="profilePicture"
+                                    accept="image/*"
+                                    onChange={handleFileSelect}
+                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                 />
-                                <div className="h-full w-full hidden items-center justify-center bg-gray-300">
-                                    <span className="text-sm font-bold text-gray-600">Invalid URL</span>
-                                </div>
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    JPG, PNG, GIF up to 5MB
+                                </p>
+
+                                {selectFile && (
+                                    <div className="mt-2 flex items-center space-x-2">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                                            {selectFile.name}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveImage}
+                                            className="text-red-600 hover:text-red-800 text-sm"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    )}
+                    </div>
+
 
                     <div className="flex justify-end space-x-4">
                        

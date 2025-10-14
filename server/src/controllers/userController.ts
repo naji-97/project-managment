@@ -1,7 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { v2 as cloudinary } from 'cloudinary';
 
 const prisma = new PrismaClient();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -72,20 +79,35 @@ export const postUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { username, email, profilePictureUrl } = req.body;
+  console.log(req.body);
+  
+  const { username, email } = req.body;
+
   try {
     
     const isUserExists = await prisma.user.findUnique({ where: { id: id } });
     if (!isUserExists) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
+    let profilePictureUrl = isUserExists.profilePictureUrl;
+
+    if (req.file) {
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      const dataUri = `data:${req.file.mimetype};base64,${b64}`;
+      const uploadResponse = await cloudinary.uploader.upload(dataUri, {
+        folder: "profile_pictures",
+        public_id: `${id}_profile`,
+        overwrite: true,
+      });
+      profilePictureUrl = uploadResponse.secure_url;
+    }
     const updatedUser = await prisma.user.update({
       where: { id: id },
       data: {
         username: username ,
         email: email ,
-        profilePictureUrl: profilePictureUrl ?? isUserExists.profilePictureUrl,
+        profilePictureUrl: profilePictureUrl ,
 
         
       },
