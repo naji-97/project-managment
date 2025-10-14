@@ -103,6 +103,7 @@ async function main() {
   const projects = await prisma.project.createManyAndReturn({
     data: [
       {
+        
         name: 'E-commerce Platform Redesign',
         description: 'Complete redesign of our e-commerce platform with modern UI/UX and improved performance',
         startDate: new Date('2024-01-15'),
