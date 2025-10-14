@@ -64,7 +64,7 @@ export default function SettingsPage() {
                 text: result.message || "Profile updated successfully!"
             });
           
-           //@typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             setMessage({
                 type: "error",
