@@ -63,6 +63,8 @@ export default function SettingsPage() {
                 type: "success",
                 text: result.message || "Profile updated successfully!"
             });
+          
+           //@typescript-eslint/no-explicit-any
         } catch (error: any) {
             setMessage({
                 type: "error",
