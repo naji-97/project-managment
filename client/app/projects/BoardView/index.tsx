@@ -163,7 +163,7 @@ const Task = ({ task }: TaskProps) => {
             {priority}
         </div>
     );
-console.log(task.assignee, 'This is TAASKS ATTACHMENTS');
+console.log(task, 'This is TAASKS ATTACHMENTS');
 
     return (
         <div
@@ -229,17 +229,48 @@ console.log(task.assignee, 'This is TAASKS ATTACHMENTS');
                 <div className="mt-3 flex items-center justify-between">
                     <div className="flex -space-x-[6px] overflow-hidden">
                         {task.assignee && (
-                            <Image
-                                key={`${task.assignee.id}`}
-                                src={`/p1.jpeg`}
-                                alt={task.assignee.username}
-                                width={30}
-                                height={30}
-                                className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
-                            />
+                            task.assignee.profilePictureUrl ? (
+                                <Image
+                                    key={`${task.assignee.id}`}
+                                    src={`${task.assignee.profilePictureUrl.includes('https') ? task.assignee.profilePictureUrl :  '/' + task.assignee.profilePictureUrl}`}
+                                    alt={task.assignee.username}
+                                    width={30}
+                                    height={30}
+                                    className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
+                                />
+                            ):
+                                (<div
+                                    className={`h-full w-full flex items-center justify-center  rounded-full `}
+                                >
+                                    <p className=" font-medium text-gray-600 text-center align-middle  h-8 w-8 rounded-full border-2 bg-gray-300 border-white object-cover dark:border-dark-secondary">
+                                        {task.assignee?.username?.charAt(0)?.toUpperCase() || '?'}
+                                    </p>
+                                </div>)
                         )}
 
                         {task.author && task.author.id !== task.assignee?.id && (
+                            task.author.profilePictureUrl ? (
+                                <Image
+                                    key={`${task.author.id}`}
+                                    src={`${task.author.profilePictureUrl.includes('https') ? task.author.profilePictureUrl :  '/' + task.author.profilePictureUrl}`}
+                                    alt={task.author.username}
+                                    width={30}
+                                    height={30}
+                                    className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
+                                />
+                            ):(
+                           
+
+                            <div
+                            className={`h-full w-full flex items-center justify-center  rounded-full `}
+                        >
+                                        <p className=" font-medium text-gray-600 text-center align-middle  h-8 w-8 rounded-full border-2 bg-gray-300 border-white object-cover dark:border-dark-secondary">
+                                {task.author?.username?.charAt(0)?.toUpperCase() || '?'}
+                            </p>
+                        </div>
+                        )
+                        )}
+                            {/* }
                             <Image
                                 key={`${task.author.id}`}
                                 src={`${task.author.profilePictureUrl!}`}
@@ -248,7 +279,7 @@ console.log(task.assignee, 'This is TAASKS ATTACHMENTS');
                                 height={30}
                                 className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
                             />
-                        )}
+                        )} */}
                     </div>
 
                     <div className="flex items-center text-gray-500 dark:text-neutral-500">
