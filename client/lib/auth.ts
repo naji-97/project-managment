@@ -1,6 +1,9 @@
 // client/lib/auth.ts
+import { createAuthClient } from 'better-auth/react';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+export const authClient = createAuthClient({
+  baseURL: `${API_BASE_URL}/api/auth`, // `API_BASE_URL/
+});
 export interface User {
   id: number;
   email: string;
@@ -18,7 +21,14 @@ export interface AuthResponse {
   error?: string;
 }
 
+
 export const authAPI = {
+   signInSocial: (provider: "google" | "github") => {
+       authClient.signIn.social({provider,
+      callbackURL:  'http://localhost:3000/'
+    });
+  },
+
   signUp: async (email: string, password: string, name: string, username: string, ) => {
     const response = await fetch(`${API_BASE_URL}/api/auth/sign-up/email`, {
       method: 'POST',

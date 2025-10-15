@@ -31,18 +31,11 @@ app.use(
     credentials: true,
   })
 )
-
 // Better Auth handler - MOUNT THIS BEFORE express.json()
 app.all("/api/auth/*splat", toNodeHandler(auth)); // Express 5 uses *splat
 
-app.use((req, res, next) => {
-  // Skip JSON parsing for Better Auth routes
-  if (req.path.startsWith('/api/auth/')) {
-    return next();
-  }
-  // Use JSON parsing for all other routes
-  return express.json()(req, res, next);
-});
+
+
 
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));

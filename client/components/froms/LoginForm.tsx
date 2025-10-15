@@ -1,7 +1,7 @@
 // client/components/LoginForm.tsx
 'use client';
 import { useState } from 'react';
-import { authAPI } from '@/lib/auth';
+import { authAPI, authClient } from '@/lib/auth';
 import { useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { toast } from "sonner";
-
 // Define the validation schema with Zod
 const loginSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address" }),
@@ -33,7 +32,7 @@ const loginSchema = z.object({
 
 // Type for the form values
 export type LoginFormValues = z.infer<typeof loginSchema>;
-
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default function LoginForm() {
 
     const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +49,22 @@ export default function LoginForm() {
         },
     });
     
+  // const handleLogin = (provider: "google" | "github") => {
+  //   const url = `${API_BASE_URL}/api/auth/sign-in/${provider}`;
+  //   console.log("handleLogin -> navigating to:", url);
+  //   window.location.href = url;
+  // };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await authClient.signIn.social({ provider: 'google' });
+      
+    } catch (error) {
+      console.error('Google sign-in failed:', error);
+      // You can add more robust error handling here
+    }
+  };
+
    async function onSubmit(values: LoginFormValues) {
         // e.preventDefault();
         setIsLoading(true);
@@ -95,11 +110,11 @@ export default function LoginForm() {
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" onClick={()=> authAPI.signInSocial('google')}>
               <Icons.google />
               <span>Google</span>
             </Button>
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" onClick={() => authAPI.signInSocial('github')}>
               <Icons.gitHub />
               <span>Github</span>
             </Button>

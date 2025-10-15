@@ -72,6 +72,20 @@ export const auth = betterAuth({
       // You can add additional logic here, like logging or notifications
     },
     },
+ 
+    socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            scope: ["profile", "email"],
+
+        },
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID!,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET!,   
+            scope: ["read:user", "user:email"],
+        },
+    },
     
     session: {
         expiresIn: 1 * 24 * 60 * 60, // 1 days
