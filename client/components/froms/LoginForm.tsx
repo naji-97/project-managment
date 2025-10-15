@@ -32,7 +32,6 @@ const loginSchema = z.object({
 
 // Type for the form values
 export type LoginFormValues = z.infer<typeof loginSchema>;
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default function LoginForm() {
 
     const [isLoading, setIsLoading] = useState(false);
@@ -49,21 +48,9 @@ export default function LoginForm() {
         },
     });
     
-  // const handleLogin = (provider: "google" | "github") => {
-  //   const url = `${API_BASE_URL}/api/auth/sign-in/${provider}`;
-  //   console.log("handleLogin -> navigating to:", url);
-  //   window.location.href = url;
-  // };
+ 
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await authClient.signIn.social({ provider: 'google' });
-      
-    } catch (error) {
-      console.error('Google sign-in failed:', error);
-      // You can add more robust error handling here
-    }
-  };
+
 
    async function onSubmit(values: LoginFormValues) {
         // e.preventDefault();

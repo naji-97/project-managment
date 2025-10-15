@@ -25,7 +25,7 @@ export interface AuthResponse {
 export const authAPI = {
    signInSocial: (provider: "google" | "github") => {
        authClient.signIn.social({provider,
-      callbackURL:  'http://localhost:3000/'
+      callbackURL: process.env.NEXT_PUBLIC_APP_URL
     });
   },
 
