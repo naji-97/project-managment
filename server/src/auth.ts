@@ -80,9 +80,9 @@ export const auth = betterAuth({
             scope: ["profile", "email"],
             mapProfileToUser: (profile) => {
             return {
-                
+                name: `${profile.given_name}${profile.family_name}`,
                 profilePictureUrl: profile.picture,
-                username: profile.email.split('@')[0], // Simple username from email
+                username: profile.given_name, // Simple username from email
             }
             }
         },
@@ -90,6 +90,13 @@ export const auth = betterAuth({
             clientId: process.env.GITHUB_CLIENT_ID!,
             clientSecret: process.env.GITHUB_CLIENT_SECRET!,   
             scope: ["read:user", "user:email"],
+            mapProfileToUser: (profile) => {
+                return {
+                    profilePictureUrl: profile.avatar_url,
+                    username: profile.login,
+                    name: profile.name
+                }
+            }
         },
     },
     
