@@ -9,10 +9,13 @@ interface SendEmailValues {
 }
 
 export async function sendEmail({ to, subject, text }: SendEmailValues) {
-  await resend.emails.send({
+    console.log("📤 Trying to send email via Resend:", { to, subject });
+  const result = await resend.emails.send({
     from: process.env.EMAIL_FROM!,
     to,
     subject,
     text,
   });
+    console.log("✅ Email sent via Resend:", result);
+    return result;
 }
