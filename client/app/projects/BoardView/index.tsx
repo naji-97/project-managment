@@ -22,12 +22,12 @@ const BoardView = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
     } = useGetTasksQuery({ projectId: Number(id) });
     const [updateTaskStatus] = useUpdateTaskStatusMutation();
     console.log(tasks);
-    
+
     const moveTask = (taskId: number, toStatus: string) => {
         updateTaskStatus({ taskId, status: toStatus });
     };
 
-    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20}/></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-full"><GridLoader speedMultiplier={0.7} color="#b2ced9" size={20} /></div>;
     if (error) return <div className="flex items-center justify-center h-full text-xl text-red-500">An error occurred while fetching tasks</div>;
 
     return (
@@ -70,7 +70,7 @@ const TaskColumn = ({
 
     const tasksCount = tasks.filter((task) => task.status === status).length;
 
-    const statusColor: Record<string , string> = {
+    const statusColor: Record<string, string> = {
         "To Do": "#2563EB",
         "Work In Progress": "#059669",
         "Under Review": "#D97706",
@@ -150,20 +150,20 @@ const Task = ({ task }: TaskProps) => {
     const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
         <div
             className={`rounded-full px-2 py-1 text-xs font-semibold ${priority === "Urgent"
-                    ? "bg-red-200 text-red-700"
-                    : priority === "High"
-                        ? "bg-yellow-200 text-yellow-700"
-                        : priority === "Medium"
-                            ? "bg-green-200 text-green-700"
-                            : priority === "Low"
-                                ? "bg-blue-200 text-blue-700"
-                                : "bg-gray-200 text-gray-700"
+                ? "bg-red-200 text-red-700"
+                : priority === "High"
+                    ? "bg-yellow-200 text-yellow-700"
+                    : priority === "Medium"
+                        ? "bg-green-200 text-green-700"
+                        : priority === "Low"
+                            ? "bg-blue-200 text-blue-700"
+                            : "bg-gray-200 text-gray-700"
                 }`}
         >
             {priority}
         </div>
     );
-console.log(task, 'This is TAASKS ATTACHMENTS');
+    console.log(task, 'This is TAASKS ATTACHMENTS');
 
     return (
         <div
@@ -175,7 +175,7 @@ console.log(task, 'This is TAASKS ATTACHMENTS');
         >
             {task.attachments && task.attachments.length > 0 && (
 
-                
+
                 <Image
 
                     src={`${task.attachments[0].fileURL}`}
@@ -184,7 +184,7 @@ console.log(task, 'This is TAASKS ATTACHMENTS');
                     height={200}
                     className="h-auto w-full rounded-t-md"
                 />
-                
+
             )}
             <div className="p-4 md:p-6">
                 <div className="flex items-start justify-between">
@@ -232,17 +232,17 @@ console.log(task, 'This is TAASKS ATTACHMENTS');
                             task.assignee.profilePictureUrl ? (
                                 <Image
                                     key={`${task.assignee.id}`}
-                                    src={`${task.assignee.profilePictureUrl.includes('https') ? task.assignee.profilePictureUrl :  '/' + task.assignee.profilePictureUrl}`}
+                                    src={`${task.assignee.profilePictureUrl.includes('https') ? task.assignee.profilePictureUrl : '/' + task.assignee.profilePictureUrl}`}
                                     alt={task.assignee.username}
                                     width={30}
                                     height={30}
                                     className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
                                 />
-                            ):
+                            ) :
                                 (<div
-                                    className={`h-full w-full flex items-center justify-center  rounded-full `}
+                                    className={` flex items-center justify-center w-7 h-7 rounded-full bg-gray-300 border-white object-cover dark:border-dark-secondary`}
                                 >
-                                    <p className=" font-medium text-gray-600 text-center align-middle  h-8 w-8 rounded-full border-2 bg-gray-300 border-white object-cover dark:border-dark-secondary">
+                                    <p className="  font-bold ">
                                         {task.assignee?.username?.charAt(0)?.toUpperCase() || '?'}
                                     </p>
                                 </div>)
@@ -252,25 +252,25 @@ console.log(task, 'This is TAASKS ATTACHMENTS');
                             task.author.profilePictureUrl ? (
                                 <Image
                                     key={`${task.author.id}`}
-                                    src={`${task.author.profilePictureUrl.includes('https') ? task.author.profilePictureUrl :  '/' + task.author.profilePictureUrl}`}
+                                    src={`${task.author.profilePictureUrl.includes('https') ? task.author.profilePictureUrl : '/' + task.author.profilePictureUrl}`}
                                     alt={task.author.username}
                                     width={30}
                                     height={30}
                                     className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
                                 />
-                            ):(
-                           
+                            ) : (
 
-                            <div
-                            className={`h-full w-full flex items-center justify-center  rounded-full `}
-                        >
-                                        <p className=" font-medium text-gray-600 text-center align-middle  h-8 w-8 rounded-full border-2 bg-gray-300 border-white object-cover dark:border-dark-secondary">
-                                {task.author?.username?.charAt(0)?.toUpperCase() || '?'}
-                            </p>
-                        </div>
-                        )
+
+                                <div
+                                    className={` flex items-center justify-center w-7 h-7 rounded-full bg-gray-300 border-white object-cover dark:border-dark-secondary`}
+                                >
+                                    <p className="  font-bold ">
+                                        {task.author?.username?.charAt(0)?.toUpperCase() || '?'}
+                                    </p>
+                                </div>
+                            )
                         )}
-                            {/* }
+                        {/* }
                             <Image
                                 key={`${task.author.id}`}
                                 src={`${task.author.profilePictureUrl!}`}

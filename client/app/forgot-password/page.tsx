@@ -28,7 +28,11 @@ export default function ForgotPasswordPage() {
                     redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`
                 }),
             });
-
+            if (response.ok) {
+                toast.success('If an account with that email exists, a reset link has been sent.');
+                setEmail('');
+            }
+            
             const data = await response.json();
 
             if (data.error) {
