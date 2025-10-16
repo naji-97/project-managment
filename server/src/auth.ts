@@ -3,18 +3,19 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { nextCookies } from "better-auth/next-js";
+import { sendEmail } from "./email";
 const prisma = new PrismaClient();
-const sendEmail = async (emailData: { to: string; subject: string; text: string }) => {
-  // Implement with your email service (Nodemailer, SendGrid, Resend, etc.)
-  console.log('Sending email:', emailData);
-  // Example with console log for development:
-  console.log(`📧 Email to: ${emailData.to}`);
-  console.log(`📧 Subject: ${emailData.subject}`);
-  console.log(`📧 Body: ${emailData.text}`);
+// const sendEmail = async (emailData: { to: string; subject: string; text: string }) => {
+//   // Implement with your email service (Nodemailer, SendGrid, Resend, etc.)
+//   console.log('Sending email:', emailData);
+//   // Example with console log for development:
+//   console.log(`📧 Email to: ${emailData.to}`);
+//   console.log(`📧 Subject: ${emailData.subject}`);
+//   console.log(`📧 Body: ${emailData.text}`);
   
-  // In production, implement actual email sending:
-  // await yourEmailService.send(emailData);
-};
+//   // In production, implement actual email sending:
+//   // await yourEmailService.send(emailData);
+// };
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
