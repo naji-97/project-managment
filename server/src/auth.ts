@@ -110,17 +110,17 @@ export const auth = betterAuth({
     defaultCookieAttributes: {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
-        httpOnly: false, // Set to true in production
+        httpOnly: process.env.NODE_ENV === "production", // Set to true in production
+        // domain: process.env.NODE_ENV === "production" ? ".vercel.app" : "localhost",
         
         
     },
     cookies: {
         session_token:{
             name: "auth-session",
-            
-            
         }
    },
+   
    },
     api: {
         basePath: "/api/auth"

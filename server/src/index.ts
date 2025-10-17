@@ -27,8 +27,9 @@ app.use(
       "https://*.vercel.app"
     ], // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "cookie"],
     credentials: true,
+    exposedHeaders: ["Set-Cookie"],
   })
 )
 // Better Auth handler - MOUNT THIS BEFORE express.json()
