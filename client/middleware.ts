@@ -1,82 +1,43 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+// import {getSessionCookie} from "better-auth/cookies";
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  
-  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
-  
-  if (pathname.startsWith('/_next/') || 
-      pathname.startsWith('/api/') || 
-      pathname.match(/\.(?:svg|png|jpg|jpeg|gif|webp|ico)$/)) {
-    return NextResponse.next();
-  }
-
-  try {
-    const API_BASE_URL = process.env.NODE_ENV === 'production' 
-      ? 'https://project-managment-oqvb.onrender.com' // Replace with your actual backend URL
-      : 'http://localhost:8000';
-
-    console.log('Checking session for path:', pathname);
-    console.log('API_BASE_URL:', API_BASE_URL);
-
-    // Use your existing session endpoint
-    const response = await fetch(`${API_BASE_URL}/api/me`, {
-      headers: {
-        'Cookie': request.headers.get('cookie') || '',
-      },
-      credentials: 'include',
+export function middleware(request: NextRequest) {
+    // Debug: Check all available cookies
+    const allCookies = request.cookies.getAll();
+    console.log("=== ALL COOKIES ===");
+    allCookies.forEach(cookie => {
+        console.log(`Cookie: "${cookie.name}, Value: ${cookie.value}"`);
     });
 
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
+    // Try multiple cookie names for different environments
+    const sessionCookie = 
+        request.cookies.get('__Secure-auth-session')?.value || // Production with secure prefix
+        request.cookies.get('auth-session')?.value;           // Development or production fallback
 
-    let hasValidSession = false;
-    let sessionData = null;
-
-    if (response.ok) {
-      try {
-        // Parse the response body to get the actual data
-        sessionData = await response.json();
-        console.log('Session data:', sessionData);
-        hasValidSession = !!sessionData?.user; // Check if user exists in response
-      } catch (parseError) {
-        console.error('Error parsing session response:', parseError);
-      }
-    }
-
-    console.log('Session verified:', hasValidSession);
+    console.log("Session cookie found:", !!sessionCookie);
     
-    if (!hasValidSession && !isPublicRoute) {
-      console.log(`🚫 No valid session for ${pathname}, redirecting to login`);
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('from', pathname);
-      return NextResponse.redirect(loginUrl);
+    const { pathname } = request.nextUrl;
+    const publicRoutes = ['/login', '/register', "/forgot-password",'/reset-password', '/api/auth'];
+    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+    console.log(`Path: ${pathname}, Has Session: ${!!sessionCookie}, Is Public: ${isPublicRoute}`);
+
+    // CASE 1: No session AND trying to access non-public route → REDIRECT TO LOGIN
+    if (!sessionCookie && !isPublicRoute) {
+        console.log(`🚫 Blocked: No session for ${pathname}, redirecting to login`);
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('from', pathname);
+        return NextResponse.redirect(loginUrl);
     }
     
-    if (hasValidSession && isPublicRoute) {
-      console.log(`🔄 Redirecting authenticated user from ${pathname} to home`);
-      return NextResponse.redirect(new URL('/', request.url));
+    // CASE 2: Has session AND trying to access public auth routes → REDIRECT TO HOME
+    else if (sessionCookie && isPublicRoute) {
+        console.log(`🔄 Redirect: Authenticated user trying to access ${pathname}, going to home`);
+        return NextResponse.redirect(new URL('/', request.url));
     }
 
+    // CASE 3: Allow all other scenarios
     console.log(`✅ Allowing access to ${pathname}`);
     return NextResponse.next();
-
-  } catch (error) {
-    console.error('Session verification failed:', error);
-    
-    if (!isPublicRoute) {
-      const loginUrl = new URL('/login', request.url);
-      return NextResponse.redirect(loginUrl);
-    }
-    
-    return NextResponse.next();
-  }
 }
-
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
-};
