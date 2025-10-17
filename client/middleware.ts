@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const API_BASE_URL = process.env.NODE_ENV === 'production' 
-      ? 'https://your-backend.onrender.com' // Replace with your actual backend URL
+      ? 'https://project-managment-oqvb.onrender.com' // Replace with your actual backend URL
       : 'http://localhost:8000';
 
     console.log('Checking session for path:', pathname);
