@@ -47,11 +47,11 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
         <StoreProvider>
             {/* <Authenticator.Provider> */}
 
-            <AuthGuard>
+            {/* <AuthGuard> */}
             <AuthProvider>
                 <DashboardLayout>{children}</DashboardLayout>
             </AuthProvider>
-            </AuthGuard>
+            {/* </AuthGuard> */}
             {/* </Authenticator.Provider> */}
         </StoreProvider>
     );
