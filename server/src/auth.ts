@@ -23,7 +23,6 @@ export const auth = betterAuth({
     }),
      trustedOrigins: [
     "http://localhost:3000",
-    "http://localhost:8000",
     "https://project-managment-lilac.vercel.app",
     "https://*.vercel.app" // Wildcard for all Vercel previews
 ],

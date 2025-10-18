@@ -26,9 +26,9 @@ app.use(
       "https://project-managment-lilac.vercel.app",
       "https://*.vercel.app"
     ], // Your frontend URL
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    exposedHeaders: ["Content-Length", "Set-Cookie"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: [ "Set-Cookie"],
     credentials: true,
     
   })
@@ -55,13 +55,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Get user session
 app.get("/api/me", async (req, res) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-   // Add CORS headers explicitly
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  return res.json(session);
+  try {
+     console.log('🔍 /api/me called with cookies:', req.headers.cookie);
+      console.log('🌐 Origin:', req.headers.origin);
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+    console.log('👤 Session data:', session);
+     // Add CORS headers explicitly
+      return res.json(session);
+  } catch (error) {
+    console.error('💥 Error in /api/me:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Your other API routes
