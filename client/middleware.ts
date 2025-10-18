@@ -9,20 +9,29 @@ const checkServerSession = async (cookieHeader: string | null) => {
     : 'http://localhost:8000';
 
   try {
+    console.log('🔍 Checking session with cookies:', cookieHeader);
+    
     const response = await fetch(`${API_BASE_URL}/api/me`, {
       headers: {
         'Cookie': cookieHeader || '',
       },
       credentials: 'include',
     });
+
+    console.log('📨 Response status:', response.status);
+    console.log('📨 Response headers:', Object.fromEntries(response.headers.entries()));
+    
     if (response.ok) {
       const sessionData = await response.json();
-      console.log("CheckServerSession", sessionData)
-      return !!sessionData?.user; // Return true if user exists
+      console.log("CheckServerSession data:", sessionData);
+      return !!sessionData?.user;
     }
+    
+    console.log('❌ Response not OK, status:', response.status);
     return false;
+    
   } catch (error) {
-    console.error('Session check failed:', error);
+    console.error('💥 Session check failed:', error);
     return false;
   }
 };

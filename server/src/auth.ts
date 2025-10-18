@@ -108,9 +108,9 @@ export const auth = betterAuth({
    advanced:{
     useSecureCookies: true, // Set to true in production (requires HTTPS)
     defaultCookieAttributes: {
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        secure: process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
-        httpOnly: process.env.NODE_ENV === "production", // Set to true in production
+        sameSite:"none", //process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure:true, // process.env.NODE_ENV === "production", // Set to true in production (requires HTTPS)
+        httpOnly: true, // process.env.NODE_ENV === "production", // Set to true in production
         // domain: process.env.NODE_ENV === "production" ? ".vercel.app" : "localhost",
         
         
