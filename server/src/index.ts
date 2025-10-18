@@ -26,10 +26,10 @@ app.use(
       "https://project-managment-lilac.vercel.app",
       "https://*.vercel.app"
     ], // Your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization", "cookie"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    exposedHeaders: ["Content-Length"],
     credentials: true,
-    exposedHeaders: ["Set-Cookie"],
   })
 )
 // Better Auth handler - MOUNT THIS BEFORE express.json()

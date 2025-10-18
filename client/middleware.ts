@@ -1,43 +1,61 @@
+// client/middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// import {getSessionCookie} from "better-auth/cookies";
 
-export function middleware(request: NextRequest) {
-    // Debug: Check all available cookies
-    const allCookies = request.cookies.getAll();
-    console.log("=== ALL COOKIES ===");
-    allCookies.forEach(cookie => {
-        console.log(`Cookie: "${cookie.name}, Value: ${cookie.value}"`);
+// Server-side session check for middleware
+const checkServerSession = async (cookieHeader: string | null) => {
+  const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://project-managment-oqvb.onrender.com'
+    : 'http://localhost:8000';
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/me`, {
+      headers: {
+        'Cookie': cookieHeader || '',
+      },
+      credentials: 'include',
     });
-
-    // Try multiple cookie names for different environments
-    const sessionCookie = 
-        request.cookies.get('__Secure-auth-session')?.value || // Production with secure prefix
-        request.cookies.get('auth-session')?.value;           // Development or production fallback
-
-    console.log("Session cookie found:", !!sessionCookie);
-    
-    const { pathname } = request.nextUrl;
-    const publicRoutes = ['/login', '/register', "/forgot-password",'/reset-password', '/api/auth'];
-    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
-
-    console.log(`Path: ${pathname}, Has Session: ${!!sessionCookie}, Is Public: ${isPublicRoute}`);
-
-    // CASE 1: No session AND trying to access non-public route → REDIRECT TO LOGIN
-    if (!sessionCookie && !isPublicRoute) {
-        console.log(`🚫 Blocked: No session for ${pathname}, redirecting to login`);
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('from', pathname);
-        return NextResponse.redirect(loginUrl);
+    if (response.ok) {
+      const sessionData = await response.json();
+      console.log("CheckServerSession", sessionData)
+      return !!sessionData?.user; // Return true if user exists
     }
-    
-    // CASE 2: Has session AND trying to access public auth routes → REDIRECT TO HOME
-    else if (sessionCookie && isPublicRoute) {
-        console.log(`🔄 Redirect: Authenticated user trying to access ${pathname}, going to home`);
-        return NextResponse.redirect(new URL('/', request.url));
-    }
+    return false;
+  } catch (error) {
+    console.error('Session check failed:', error);
+    return false;
+  }
+};
 
-    // CASE 3: Allow all other scenarios
-    console.log(`✅ Allowing access to ${pathname}`);
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  
+  if (pathname.startsWith('/_next/') || 
+      pathname.startsWith('/api/') || 
+      pathname.match(/\.(?:svg|png|jpg|jpeg|gif|webp|ico)$/)) {
     return NextResponse.next();
+  }
+
+  // Use the server-side session check
+  const hasValidSession = await checkServerSession(request.headers.get('cookie'));
+  
+  console.log(`Path: ${pathname}, Has Session: ${hasValidSession}, Is Public: ${isPublicRoute}`);
+
+  if (!hasValidSession && !isPublicRoute) {
+    console.log(`🚫 No session for ${pathname}, redirecting to login`);
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+  
+  if (hasValidSession && isPublicRoute) {
+    console.log(`🔄 Redirecting authenticated user from ${pathname} to home`);
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  console.log(`✅ Allowing access to ${pathname}`);
+  return NextResponse.next();
 }
